@@ -23,7 +23,7 @@ Many quantities in science and engineering (and thus in scientific computing) be
 
 More importantly, many algorithms can be formulated using the basic operations (linear combinations and inner products), in combination with some recipe for spitting out new vectors (e.g. applying a linear map): gradient optimization, ODE integrators, Krylov methods, ...
 
-### Current situation in Julia
+### Current situation and problems in Julia
 
 The most elementary Julia type that acts as a vector is of course `Vector{T<:Number}`, or in fact (almost *) any subtype of `AbstractArray{T<:Number}`. However, many other types which are not subtypes of `AbstractArray` also are vectors conceptually, e.g. types for representing functions (ApproxFun ecoystem), `Tangent` types in the AD ecosystem, and many more.
 
@@ -47,8 +47,7 @@ In summary, the main problem is that there actually is no formal standardized ve
 
 Different ecosystems have responded to this hiatus in different ways. Several Krylov and optimization packages merely restrict their applicability to instances of `(Abstract)Array{T<:Number}` or even simply `Vector{T<:Number}` (like their Fortran and C analogues would probably do). The DifferentialEquations.jl ecosystem does more or less the same, restricting to `AbstractArray` (if I remember correctly), but provides a bunch of packages such as `RecursiveArrayTools.jl` and `ArrayInterface.jl` to accommodate for more complex use cases. Finally, the AD ecosystem (Zygote.jl and ChainRules.jl) use custom `Tangent` types for which they define the necessary operations, using a lot of internal machinery to destructure custom types.
 
-Forcing everything to be a subtype of `AbstractArray` is an unsatisfactory solution. Some vector like objects might not be represented with respect to a basis, and thus have no notion of indexing, and might not even be finite-dimensional.
-
+Forcing everything to be a subtype of `AbstractArray` is an unsatisfactory solution. Some vector like objects might not be naturally represented with respect to a basis, and thus have no notion of indexing, and might not even be finite-dimensional. The `AbstractArray` interface is and should be distinct from a general vector (space) interface.
 
 ### New solution
 With VectorInterface.jl, I have tried to create a simple package to resolve my gripes. As I hope that I am not alone with those, I would like this to be useful for the community and could eventually evolve into a standardized interface. Therefore, I would very much value comments. Everything is up for bikeshedding. I tried to come up with a design which is compatible with `LinearAlgebra` (e.g. not stealing names) and does not commit type piracy. Currently, VectorInterface.jl provides the following minimalistic interface:
