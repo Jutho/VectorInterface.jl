@@ -39,7 +39,7 @@ However, I have several gripes with the Julia interface (or lack thereof) to acc
 
 5.  Most (but not all) vector-like objects in programming belong to a finite-dimensional vector space. For `v::AbstractArray{T<:Number}`, this dimension is given by `length(v)`, but again this interface is also used for the iteration length, and so new types might face an incompatibility as with `eltype`. And for structured arrays, `length(v)` might also not express the vector space dimension, for e.g. `UpperTriangular{T<:Number}`, the natural vector space dimension is `n*(n+1)/2`, not `n*n`.
 
-6.  The inner product and norm corresponds to the Julia methods `LinearAlgebra.dot` and `LinearAlgebra.norm`. Unlike in some of the previous points, `dot` and `norm` natively support nested arrays. However, `dot` is so loose in its implementation, that it also happily computes an inner product between things which are probably not vectors from the same vector space, such as `dot( (1, 2, [3, 4]), [[1], (2,), (3,4)])`. In particular, `dot` and `norm` alsoaccepts tuples, whereas tuples don't behave as vectors with respect to the previous methods (`+`, `*`, `zero`).
+6.  The inner product and norm corresponds to the Julia methods `LinearAlgebra.dot` and `LinearAlgebra.norm`. Unlike in some of the previous points, `dot` and `norm` natively support nested arrays. However, `dot` is so loose in its implementation, that it also happily computes an inner product between things which are probably not vectors from the same vector space, such as `dot( (1, 2, [3, 4]), [[1], (2,), (3,4)])`. In particular, `dot` and `norm` also accept tuples, whereas tuples don't behave as vectors with respect to the previous methods (`+`, `*`, `zero`).
 
 In summary, the main problem is that there actually is no formal standardized vector interface in Julia, despite its broad potential applicability for writing very generic algorithms.
 
@@ -72,7 +72,7 @@ Furthermore, in-place methods will work recursively so as to try to maximally wo
 Similarly, for `v = ((1., 2.), [3., 4.])`, `scale!!(v, 0.5)` could of course not work in-place on the outer tuple or inner tuple, but would still work in-place on the inner array. Hence, the return value of `scale!!(v, 0.5)` is of course `((0.5, 1.), [1.5, 2.])`, but after his operation, `v` would be `((1., 2.), [1.5, 2.])`.
 
 However, I have various questions about which I have not yet made up my mind:
-* Should tuples actually be supported? In Base, they are not treated as vectors, do they are supported by `dot` and `norm`.
+* Should tuples actually be supported? In Base, they are not treated as vectors, though they are supported by `dot` and `norm`.
 * Should there be some `vectordim` function (name up to debate) to probe the vector space dimension?
 * Should I also export `dot`? Or should `inner` just become `dot` and should I not care about its looseness?
 * Should I have fallbacks in place for user types that did already implement `rmul!`, `mul!`, `axpy!`, `axpby!` and `dot` (the latter relating to the previous question)?
