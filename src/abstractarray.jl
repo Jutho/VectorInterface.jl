@@ -13,14 +13,14 @@ end
 
 function zerovector!(x::AbstractArray{<:Number}, ::Type{S} = scalartype(x)) where {S<:Number}
     if scalartype(x) !== S
-        error("Cannot make a zero vector with scalar type $S in-place in an object of type $(typeof(x))")
+        throw(ArgumentError("cannot make a zero vector with scalar type $S in-place in an object of type $(typeof(x))"))
     else
         return fill!(x, zero(S))
     end
 end
 function zerovector!(x::AbstractArray, ::Type{S} = scalartype(x)) where {S<:Number}
     if scalartype(x) !== S
-        error("Cannot make a zero vector with scalar type $S in-place in an object of type $(typeof(x))")
+        throw(ArgumentError("cannot make a zero vector with scalar type $S in-place in an object of type $(typeof(x))"))
     else
         x .= zerovector!!.(x, S)
         return x
@@ -53,7 +53,7 @@ function scale!(x::AbstractArray, α::Number)
 end
 function scale!(y::AbstractArray, x::AbstractArray, α::Number)
     y .= scale!!.(y, x, α)
-    return x
+    return y
 end
 
 function scale!!(x::AbstractArray{T}, α::T) where {T<:BlasFloat}
@@ -72,17 +72,19 @@ function scale!!(x::AbstractArray{T}, α::Number) where {T<:Number}
     end
 end
 function scale!!(x::AbstractArray, α::Number)
-    if promote_op(scale, eltype(x), typeof(α)) <: eltype(x)
+    T = scalartype(x)
+    if promote_type(T, typeof(α)) <: T
         x .= scale!!.(x, α)
     else
         return scale!!.(x, α)
     end
 end
 function scale!!(y::AbstractArray, x::AbstractArray, α::Number)
-    try
+    T = scalartype(x)
+    if promote_type(T, typeof(α)) <: T
         y .= scale!!.(y, x, α)
         return y
-    catch
+    else
         return scale!!.(y, x, α)
     end
 end

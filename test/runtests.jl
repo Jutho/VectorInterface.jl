@@ -12,6 +12,8 @@ y = (collect(zip(randn(2,2), rand(2,2))), (randn(), randn(3), randn(2,2)'), rand
 @testset "scalartype" begin
     s = @constinferred scalartype(x)
     @test s == Float64
+    @test_throws ArgumentError scalartype(())
+    @test_throws ArgumentError scalartype((randn(Float64, 2), randn(ComplexF64, 3)))
 end
 
 @testset "zerovector" begin
@@ -29,6 +31,10 @@ end
     xy = [deepcopy(x), deepcopy(y)]
     z4 = @constinferred zerovector!(xy)
     @test all(deepcollect(z4) .=== zero(scalartype(xy)))
+    @test_throws ArgumentError zerovector!(xy, ComplexF64)
+
+    z5 = @constinferred zerovector!(randn(ComplexF64, 5, 5))
+    @test all(deepcollect(z5) .=== zero(ComplexF64))
 end
 
 @testset "scale" begin
@@ -36,17 +42,37 @@ end
     z = @constinferred scale(x, α)
     @test all(deepcollect(z) .== α .* deepcollect(x))
     z2 = @constinferred scale!!(deepcopy(x), α)
-    @test all(deepcollect(z2) .== α .* deepcollect(x))
+    @test deepcollect(z2) ≈ (α .* deepcollect(x))
+    xcopy = deepcopy(x)
+    z2 = @constinferred scale!!(deepcopy(y), xcopy, α)
+    @test deepcollect(z2) ≈ (α .* deepcollect(x))
+    @test all(deepcollect(xcopy) .== deepcollect(x))
 
     xy = [deepcopy(x), deepcopy(y)]
     z3 = @constinferred scale!(deepcopy(xy), α)
-    @test all(deepcollect(z3) .== α .* deepcollect(xy))
+    @test deepcollect(z3) ≈ (α .* deepcollect(xy))
+    xycopy = deepcopy(xy)
+    z3 = @constinferred scale!(zerovector(xy), xycopy, α)
+    @test deepcollect(z3) ≈ (α .* deepcollect(xy))
+    @test all(deepcollect(xycopy) .== deepcollect(xy))
 
     α = randn(ComplexF64)
     z4 = @constinferred scale(x, α)
-    @test all(deepcollect(z4) .== α .* deepcollect(x))
-    z5 = @constinferred scale!!(deepcopy(x), α)
-    @test all(deepcollect(z5) .== α .* deepcollect(x))
+    @test deepcollect(z4) ≈ (α .* deepcollect(x))
+    xcopy = deepcopy(x)
+    z5 = @constinferred scale!!(xcopy, α)
+    @test deepcollect(z5) ≈ (α .* deepcollect(x))
+    @test all(deepcollect(xcopy) .== deepcollect(x))
+
+    α = randn(ComplexF64)
+    xcopy = deepcopy(x)
+    z6 = @constinferred scale!!(zerovector(x), xcopy, α)
+    @test deepcollect(z6) ≈ (α .* deepcollect(x))
+    @test all(deepcollect(xcopy) .== deepcollect(x))
+    xz = @constinferred zerovector(x, ComplexF64)
+    z6 = @constinferred scale!!(xz, xcopy, α)
+    @test deepcollect(z6) ≈ (α .* deepcollect(x))
+    @test all(deepcollect(xcopy) .== deepcollect(x))
 end
 
 @testset "add" begin
@@ -78,9 +104,9 @@ end
 
     α, β = randn(ComplexF64, 2)
     z4 = @constinferred add(y, x, α)
-    @test all(deepcollect(z4) .== muladd.(deepcollect(x), α, deepcollect(y)))
+    @test deepcollect(z4) ≈ (muladd.(deepcollect(x), α, deepcollect(y)))
     z4 = @constinferred add(y, x, α, β)
-    @test all(deepcollect(z4) .== muladd.(deepcollect(x), α, deepcollect(y) .* β))
+    @test deepcollect(z4) ≈ (muladd.(deepcollect(x), α, deepcollect(y) .* β))
 
     α, β = randn(ComplexF64, 2)
     z5 = @constinferred add!!(deepcopy(y), deepcopy(x), α)
