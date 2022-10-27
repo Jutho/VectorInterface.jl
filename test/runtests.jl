@@ -6,9 +6,13 @@ deepcollect(x) = vcat(map(deepcollect, x)...)
 deepcollect(x::Number) = x
 
 
-x = (collect(zip(randn(2,2), rand(2,2))), (randn(), randn(3), randn(2,2)'), randn(), (view(randn(4,4), 1:2, [1,3,4]),))
-y = (collect(zip(randn(2,2), rand(2,2))), (randn(), randn(3), randn(2,2)'), randn(), (view(randn(4,4), 1:2, [1,3,4]),))
+x1 = (collect(zip(randn(2,2), rand(2,2))), (randn(), randn(3), randn(2,2)'), randn(), (view(randn(4,4), 1:2, [1,3,4]),))
+y1 = (collect(zip(randn(2,2), rand(2,2))), (randn(), randn(3), randn(2,2)'), randn(), (view(randn(4,4), 1:2, [1,3,4]),))
 
+x2 = randn(3,3,3)
+y2 = randn(3,3,3)
+
+for (x,y) in ((x1,y1), (x2,y2))
 @testset "scalartype" begin
     s = @constinferred scalartype(x)
     @test s == Float64
@@ -125,6 +129,7 @@ end
     α, β = randn(ComplexF64, 2)
     s2 = @constinferred inner(scale(x, α), scale(y, β))
     @test s2 ≈ inner(α * deepcollect(x), β * deepcollect(y))
+end
 end
 
 @testset "quality assurance" begin
