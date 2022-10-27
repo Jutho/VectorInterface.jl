@@ -7,7 +7,7 @@
 #------------
 scalartype(::Type{Tuple{}}) = throw(ArgumentError("no scalar type is defined for empty tuple"))
 scalartype(::Type{Tuple{T}}) where {T} = scalartype(T)
-scalartype(::Type{NTuple{N,T}}) where {N,T} = scalartype(T)
+scalartype(::Type{Tuple{T, Vararg{T}}}) where {T} = scalartype(T)
 function scalartype(::Type{TT}) where {TT<:Tuple}
     S = scalartype(Base.tuple_type_head(TT))
     S2 = scalartype(Base.tuple_type_tail(TT))

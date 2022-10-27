@@ -1,7 +1,27 @@
 # VectorInterface
 
-[![Build Status](https://github.com/Jutho/VectorInterface.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Jutho/VectorInterface.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Coverage](https://codecov.io/gh/Jutho/VectorInterface.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Jutho/VectorInterface.jl)
+
+| **Documentation** | **Build Status** | **License** |
+|:-----------------:|:----------------:|:-----------:|
+| [![][docs-stable-img]][docs-stable-url] [![][docs-dev-img]][docs-dev-url] | [![][aqua-img]][aqua-url] [![CI][github-img]][github-url] [![][codecov-img]][codecov-url] | [![license][license-img]][license-url] |
+
+[docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
+[docs-dev-url]: https://jutho.github.io/VectorInterface.jl/latest
+
+[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
+[docs-stable-url]: https://jutho.github.io/VectorInterface.jl/stable
+
+[github-img]: https://github.com/Jutho/VectorInterface.jl/workflows/CI/badge.svg
+[github-url]: https://github.com/Jutho/VectorInterface.jl/actions?query=workflow%3ACI
+
+[aqua-img]: https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg
+[aqua-url]: https://github.com/JuliaTesting/Aqua.jl
+
+[codecov-img]: https://codecov.io/gh/Jutho/VectorInterface.jl/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/Jutho/VectorInterface.jl
+
+[license-img]: http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat
+[license-url]: LICENSE.md
 
 ---
 

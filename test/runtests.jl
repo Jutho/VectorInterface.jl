@@ -126,3 +126,8 @@ end
     s2 = @constinferred inner(scale(x, α), scale(y, β))
     @test s2 ≈ inner(α * deepcollect(x), β * deepcollect(y))
 end
+
+@testset "quality assurance" begin
+    using Aqua
+    Aqua.test_all(VectorInterface)
+end
