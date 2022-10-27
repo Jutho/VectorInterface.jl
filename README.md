@@ -17,7 +17,7 @@
 [aqua-img]: https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg
 [aqua-url]: https://github.com/JuliaTesting/Aqua.jl
 
-[codecov-img]: https://codecov.io/gh/Jutho/VectorInterface.jl/branch/master/graph/badge.svg
+[codecov-img]: https://codecov.io/gh/Jutho/VectorInterface.jl/branch/main/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/Jutho/VectorInterface.jl
 
 [license-img]: http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat
