@@ -82,7 +82,7 @@ With VectorInterface.jl, I have tried to create a simple package to resolve my g
 
     *Comment: Ideally, the `zerovector` functionality would be provided by `Base.zero`.*
 
-*   `zerovector(v, S<:Number)` creates a zero vector of similar type, but with a modified scalar type that is now given by `S`. In fact, also `zerovector!(v, S)` and `zerovector!!(v, S)` work, but for the former, `S = scalartype(v)` is the only sensible choice.
+*   `zerovector(v, S<:Number)` creates a zero vector of similar type, but with a modified scalar type that is now given by `S`. `zerovector!(v)` sets `v` equal to the zero vector; in that case the scalar type cannot be changed. Finally `zerovector!!(v, S)` works, but reduces to `zerovector(v, S)` if `scalartype(v)` is not `S`.
 
     *Comment: Given that there is a tendency to zero out uninitialized memory, I think it is fine to merge the concept of constructing a new vector with different scalar type with that of constructing the zero vector.*
 

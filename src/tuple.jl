@@ -21,8 +21,8 @@ function zerovector(x::Tuple, ::Type{S} = scalartype(x)) where {S<:Number}
     y = map(xᵢ->zerovector(xᵢ, S), x)
     return y
 end
-function zerovector!!(x::Tuple, ::Type{S} = scalartype(x)) where {S<:Number}
-    y = map(xᵢ->zerovector!!(xᵢ, S), x)
+function zerovector!!(x::Tuple)
+    y = map(xᵢ->zerovector!!(xᵢ), x)
     return y
 end
 

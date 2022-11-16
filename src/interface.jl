@@ -55,7 +55,7 @@ vector can be specified.
 Also see: [`zerovector`](@ref), [`zerovector!`](@ref)
 """
 function zerovector!! end
-zerovector(x, S::Type{<:Number}) = S == scalartype(x) ? zerovector!!(x) : zerovector(x, S)
+zerovector!!(x, S::Type{<:Number}) = S == scalartype(x) ? zerovector!!(x) : zerovector(x, S)
 
 """
     scale(x, α::Number)
@@ -84,7 +84,7 @@ function scale! end
     scale!!(y, x, α)
 
 Rescale `x` with the scalar coefficient `α`, thereby trying to overwrite and thus recylce
-the contens of `x` (in the first form) or `y` (in the second form).  A new object will be
+the contents of `x` (in the first form) or `y` (in the second form).  A new object will be
 created when this fails due to immutability, incompatible scalar types or
 incommensurate sizes.
 
