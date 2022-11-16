@@ -88,7 +88,7 @@ With VectorInterface.jl, I have tried to create a simple package to resolve my g
 
 *   `scale(v, α)`, `scale!(v, α)` and `scale!!(v, α)` rescale the vector `v` with the scalar coefficient `α`. The second method tries to do this in place, but will fail if `α` cannot be converted to `scalartype(v)` (or if `v` contains immutable contents), whereas the third method is the BangBang-style unified solution. There is also `scale!(w, v, α)` and `scale!!(w, v, α)` to rescale `v` out of place, but storing the result in `w`.
 
-*   `add(w, [β = 1,] v [, α = 1])`, `add!(w, [β,] v [, α])` and `add!!(w, [β,] v [, α])` compute `w * β + v * α`, where (by now self-explanatory) the second method stores the result in `w` (and errors if not possible), and the third method tries to store in `w` but doesn't error.
+*   `add(w, v, [, α = 1, β = 1])`, `add!(w, v, [, α = 1, β = 1])` and `add!!(w, v, [, α = 1, β = 1]))` compute `w * β + v * α`, where (by now self-explanatory) the second method stores the result in `w` (and errors if not possible), and the third method tries to store in `w` but doesn't error.
 
 *   `inner(v, w)` works almost equivalent to `dot(v, w)`, is sometimes a bit more efficient, but also more strict in what arguments it allows.
 

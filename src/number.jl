@@ -12,19 +12,27 @@ zerovector!!(x::Number, ::Type{S} = scalartype(x)) where {S<:Number} = zero(S)
 
 # scale & scale!!
 #-----------------
-scale(x::Number, α::Number) = x * α
+# note: the following is required to make scale(NaN, 0) = 0
+scale(x::Number, α::Number) = ifelse(iszero(α), zero(x) * α, x * α)
 scale!!(x::Number, α::Number) = scale(x, α)
 scale!!(y::Number, x::Number, α::Number) = scale(x, α)
 
 # add & add!!
 #-------------
+# note: the following are required to make zero coefficients kill NaN values in x or y
 add(y::Number, x::Number) = y + x
 add(y::Number, x::Number, α::_One) = add(y, x)
-add(y::Number, x::Number, α::Number) = muladd(x, α, y)
+function add(y::Number, x::Number, α::Number)
+    return ifelse(iszero(α), muladd(zero(x), α, y), muladd(x, α, y))
+end
 add(y::Number, x::Number, α::_One, β::_One) = add(y, x)
-add(y::Number, x::Number, α::Number, β::_One) = muladd(x, α, y)
-add(y::Number, x::Number, α::_One, β::Number) = muladd(y, β, x)
-add(y::Number, x::Number, α::Number, β::Number) = muladd(x, α, β*y)
+function add(y::Number, x::Number, α::Number, β::_One)
+    return ifelse(iszero(α), muladd(zero(x), α, y), muladd(x, α, y))
+end
+function add(y::Number, x::Number, α::_One, β::Number)
+    return ifelse(iszero(β), muladd(zero(y), β, x), muladd(y, β, x))
+end
+add(y::Number, x::Number, α::Number, β::Number) = add(scale(y, β), x, α)
 
 add!!(y::Number, x::Number) = add(y, x)
 add!!(y::Number, x::Number, α::ONumber) = add(y, x, α)
