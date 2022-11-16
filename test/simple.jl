@@ -29,7 +29,7 @@ end
     @test all(deepcollect(z3) .=== zero(ComplexF64))
     z4 = @constinferred zerovector!!(deepcopy(x), ComplexF64)
     @test all(deepcollect(z4) .=== zero(ComplexF64))
-    @test_throws ArgumentError zerovector!(deepcopy(x), ComplexF64)
+    @test_throws MethodError zerovector!(deepcopy(x), ComplexF64)
 end
 
 @testset "scale" begin

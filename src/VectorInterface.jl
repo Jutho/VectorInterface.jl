@@ -29,6 +29,7 @@ const ONumber = Union{_One, Number}
 include("number.jl")
 include("abstractarray.jl")
 include("tuple.jl")
+include("namedtuple.jl")
 
 # General fallback implementation: currently disabled
 # include("fallbacks.jl")
