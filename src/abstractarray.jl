@@ -27,7 +27,7 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 scale(x::AbstractArray, α::Number) = scale.(x, α)
 
 function scale!(x::BLASVector, α::Number)
-    LinearAlgebra.BLAS.scal!(convert(eltype(x), α), x)
+    LinearAlgebra.rmul!(x, convert(eltype(x), α))
     return x
 end
 function scale!(x::AbstractArray, α::Number)
@@ -68,12 +68,12 @@ end
 # Special case: simple numerical arrays with BLAS-compatible floating point type
 function add!(y::BLASVector{T}, x::BLASVector{T},
                 α::ONumber = _one, β::_One = _one) where {T<:BlasFloat}
-    LinearAlgebra.BLAS.axpy!(convert(T, α), x, y)
+    LinearAlgebra.axpy!(convert(T, α), x, y)
     return y
 end
 function add!(y::BLASVector{T}, x::BLASVector{T},
                 α::ONumber, β::Number) where {T<:BlasFloat}
-    LinearAlgebra.BLAS.axpby!(convert(T, α), x, convert(T, β), y)
+    LinearAlgebra.axpby!(convert(T, α), x, convert(T, β), y)
     return y
 end
 # General case:
