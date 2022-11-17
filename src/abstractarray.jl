@@ -4,11 +4,11 @@ const BLASVector{T<:BlasFloat} = Union{DenseArray{T},StridedVector{T}}
 
 # scalartype
 #------------
-scalartype(::Type{A}) where {T, A<:AbstractArray{T}} = scalartype(T) # recursive
+scalartype(::Type{A}) where {T,A<:AbstractArray{T}} = scalartype(T) # recursive
 
 # zerovector & zerovector!!
 #---------------------------
-function zerovector(x::AbstractArray, ::Type{S} = scalartype(x)) where {S<:Number}
+function zerovector(x::AbstractArray, ::Type{S}=scalartype(x)) where {S<:Number}
     return zerovector.(x, S)
 end
 
@@ -58,7 +58,7 @@ end
 
 # add, add! & add!!
 #-------------------
-function add(y::AbstractArray, x::AbstractArray, α::ONumber = _one, β::ONumber = _one)
+function add(y::AbstractArray, x::AbstractArray, α::ONumber=_one, β::ONumber=_one)
     ax = axes(x)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Output axes $ay differ from input axes $ax"))
@@ -67,17 +67,17 @@ end
 
 # Special case: simple numerical arrays with BLAS-compatible floating point type
 function add!(y::BLASVector{T}, x::BLASVector{T},
-                α::ONumber = _one, β::_One = _one) where {T<:BlasFloat}
+              α::ONumber=_one, β::_One=_one) where {T<:BlasFloat}
     LinearAlgebra.axpy!(convert(T, α), x, y)
     return y
 end
 function add!(y::BLASVector{T}, x::BLASVector{T},
-                α::ONumber, β::Number) where {T<:BlasFloat}
+              α::ONumber, β::Number) where {T<:BlasFloat}
     LinearAlgebra.axpby!(convert(T, α), x, convert(T, β), y)
     return y
 end
 # General case:
-function add!(y::AbstractArray, x::AbstractArray, α::ONumber = _one, β::ONumber = _one)
+function add!(y::AbstractArray, x::AbstractArray, α::ONumber=_one, β::ONumber=_one)
     ax = axes(x)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Output axes $ay differ from input axes $ax"))
@@ -85,7 +85,7 @@ function add!(y::AbstractArray, x::AbstractArray, α::ONumber = _one, β::ONumbe
     return y
 end
 
-function add!!(y::AbstractArray, x::AbstractArray, α::ONumber = _one, β::ONumber = _one)
+function add!!(y::AbstractArray, x::AbstractArray, α::ONumber=_one, β::ONumber=_one)
     T = scalartype(y)
     if promote_type(T, typeof(α), typeof(β), scalartype(x)) <: T
         return add!(y, x, α, β)
@@ -99,7 +99,9 @@ end
 
 # inner
 #-------
-inner(x::AbstractArray{<:Number}, y::AbstractArray{<:Number}) = LinearAlgebra.dot(x, y)
+function inner(x::BLASVector{T}, y::BLASVector{T}) where {T<:BlasFloat}
+    return LinearAlgebra.dot(x, y)
+end
 function inner(x::AbstractArray, y::AbstractArray)
     ax = axes(x)
     ay = axes(y)

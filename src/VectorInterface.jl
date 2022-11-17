@@ -1,9 +1,7 @@
 module VectorInterface
 
-import LinearAlgebra
-import LinearAlgebra: norm
-import LinearAlgebra: BlasFloat
-import Base: promote_type, promote_op
+using LinearAlgebra: LinearAlgebra, norm, BlasFloat
+using Base: promote_type, promote_op
 
 # General interface: export
 export scalartype
@@ -23,7 +21,7 @@ Base.promote_rule(::Type{_One}, ::Type{T}) where {T<:Number} = T
 Base.iszero(::_One) = false
 Base.isone(::_One) = true
 
-const ONumber = Union{_One, Number}
+const ONumber = Union{_One,Number}
 
 # Specific implementations for Base types / type hierarchies
 include("number.jl")

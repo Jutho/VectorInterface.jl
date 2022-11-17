@@ -7,7 +7,7 @@ scalartype(::Type{T}) where {T<:Number} = T
 
 # zerovector & zerovector!!
 #---------------------------
-zerovector(x::Number, ::Type{S} = scalartype(x)) where {S<:Number} = zero(S)
+zerovector(x::Number, ::Type{S}=scalartype(x)) where {S<:Number} = zero(S)
 zerovector!!(x::Number) = zero(x)
 
 # scale & scale!!
@@ -41,4 +41,4 @@ add!!(y::Number, x::Number, α::ONumber, β::ONumber) = add(y, x, α, β)
 
 # inner
 #-------
-inner(x::Number, y::Number) = conj(x)*y
+inner(x::Number, y::Number) = conj(x) * y

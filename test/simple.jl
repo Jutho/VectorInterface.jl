@@ -6,8 +6,8 @@ using TestExtras
 deepcollect(x) = vcat(map(deepcollect, x)...)
 deepcollect(x::Number) = x
 
-x = randn(3,3,3)
-y = randn(3,3,3)
+x = randn(3, 3, 3)
+y = randn(3, 3, 3)
 
 @testset "scalartype" begin
     s = @constinferred scalartype(x)
