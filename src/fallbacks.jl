@@ -5,7 +5,7 @@
 # They do not enforce any compatibility between the different vector types
 
 @noinline function _warn_message(fun, type)
-    return string("The function `", fun, "` is not defined for (values of) type `", type,
+    return string("The function `", fun, "` is not implemented for (values of) type `", type,
                   "`; this fallback will disappear in future versions of VectorInterface.jl")
 end
 @noinline function _error_message(fun, type)
@@ -53,7 +53,7 @@ function zerovector!!(x)
     elseif applicable(zero, x)
         return zero(x)
     elseif applicable(similar, x) && applicable(LinearAlgebra.rmul!, x, false)
-        return rmul!(similar(x), false)
+        return LinearAlgebra.rmul!(similar(x), false)
     else
         throw(ArgumentError(_error_message(zerovector!!, T)))
     end
@@ -69,6 +69,8 @@ function scale(x, α::ONumber)
         @warn _warn_message(scale, T) maxlog = 1
         if applicable(*, x, α)
             return x * α
+        elseif applicable(*, α, x)
+            return α * x
         else
             throw(ArgumentError(_error_message(scale, T)))
         end
@@ -93,7 +95,8 @@ function scale!!(x, α::ONumber)
     (α isa _One) && return x
     T = Tuple{typeof(x),typeof(α)}
     @warn _warn_message(scale!!, T) maxlog = 1
-    if applicable(LinearAlgebra.rmul!, x, α)
+    Tx = scalartype(x)
+    if applicable(LinearAlgebra.rmul!, x, α) && promote_type(Tx, typeof(α)) <: Tx
         return LinearAlgebra.rmul!(x, α)
     elseif applicable(*, x, α)
         return x * α
@@ -122,7 +125,9 @@ function scale!!(y, x, α::ONumber)
     else
         T = Tuple{typeof(y),typeof(x),typeof(α)}
         @warn _warn_message(scale!!, T) maxlog = 1
-        if applicable(LinearAlgebra.mul!, y, x, α)
+        Tx = scalartype(x)
+        Ty = scalartype(y)
+        if applicable(LinearAlgebra.mul!, y, x, α) && promote_type(Ty, Tx, typeof(α)) <: Ty
             return LinearAlgebra.mul!(y, x, α)
         elseif applicable(*, x, α)
             return x * α
@@ -152,7 +157,7 @@ end
 
 function add!(y, x, α::ONumber=_one)
     α′ = (α isa _One) ? true : α
-    T = Tuple{typeof(y),typeof(x),α′}
+    T = Tuple{typeof(y),typeof(x),typeof(α′)}
     @warn _warn_message(add!, T) maxlog = 1
     if applicable(LinearAlgebra.axpy!, α′, x, y)
         return LinearAlgebra.axpy!(α′, x, y)
@@ -166,7 +171,7 @@ function add!(y, x, α::ONumber, β::ONumber)
         return add!(y, x, α)
     else
         α′ = (α isa _One) ? true : α
-        T = Tuple{typeof(y),typeof(x),α′,β}
+        T = Tuple{typeof(y),typeof(x),typeof(α′),typeof(β)}
         @warn _warn_message(add!, T) maxlog = 1
         if applicable(LinearAlgebra.axpby!, α′, x, β, y)
             return LinearAlgebra.axpby!(α′, x, β, y)
@@ -179,7 +184,9 @@ end
 function add!!(y, x)
     T = Tuple{typeof(y),typeof(x)}
     @warn _warn_message(add!!, T) maxlog = 1
-    if applicable(LinearAlgebra.axpy!, true, x, y)
+    Tx = scalartype(x)
+    Ty = scalartype(y)
+    if applicable(LinearAlgebra.axpy!, true, x, y) && promote_type(Tx, Ty) <: Ty
         return LinearAlgebra.axpy!(true, x, y)
     elseif applicable(+, y, x)
         return y + x
@@ -192,8 +199,10 @@ function add!!(y, x, α::ONumber)
     if α isa _One
         return add!!(y, x)
     else
-        if applicable(LinearAlgebra.axpy!, α, x, y)
-            T = Tuple{typeof(y),typeof(x),α}
+        Tx = scalartype(x)
+        Ty = scalartype(y)
+        if applicable(LinearAlgebra.axpy!, α, x, y) && promote_type(typeof(α), Tx, Ty) <: Ty
+            T = Tuple{typeof(y),typeof(x),typeof(α)}
             @warn _warn_message(add!!, T) maxlog = 1
             return LinearAlgebra.axpy!(α, x, y)
         else
@@ -207,7 +216,10 @@ function add!!(y, x, α::ONumber, β::ONumber)
         return add!!(y, x, α)
     else
         α′ = (α isa _One) ? true : α
-        if applicable(LinearAlgebra.axpby!, α′, x, β, y)
+        Tx = scalartype(x)
+        Ty = scalartype(y)
+        if applicable(LinearAlgebra.axpby!, α′, x, β, y) &&
+                promote_type(typeof(α), Tx, typeof(β), Ty) <: Ty
             T = Tuple{typeof(y),typeof(x),typeof(α′),typeof(β)}
             @warn _warn_message(add!!, T) maxlog = 1
             return LinearAlgebra.axpby!(α′, x, β, y)
@@ -222,9 +234,9 @@ end
 function inner(x, y)
     T = Tuple{typeof(x),typeof(y)}
     @warn _warn_message(inner, T) maxlog = 1
-    if applicable(dot, x, y)
-        return dot(x, y)
+    if applicable(LinearAlgebra.dot, x, y)
+        return LinearAlgebra.dot(x, y)
     else
-        throw(ArgumentError(_error_message(dot, T)))
+        throw(ArgumentError(_error_message(inner, T)))
     end
 end

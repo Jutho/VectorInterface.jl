@@ -9,6 +9,10 @@ println("Testing with complicated composite object")
 println("=========================================")
 include("complicated.jl")
 
+println("Testing fallbacks with unsupported object")
+println("=========================================")
+include("unsupported.jl")
+
 println("Quality control test with Aqua.jl")
 println("=================================")
 module AquaVectorInterface
