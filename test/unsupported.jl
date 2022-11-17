@@ -3,6 +3,8 @@ using VectorInterface
 using Test
 using TestExtras
 
+using VectorInterface: _one
+
 include("simplevec.jl")
 
 deepcollect(x) = vcat(map(deepcollect, x)...)
@@ -86,6 +88,13 @@ end
     # @test all(deepcollect(z) .== muladd.(deepcollect(x), α, deepcollect(y) .* β))
     @test deepcollect(z) ≈ muladd.(deepcollect(x), α, deepcollect(y) .* β)
 
+    z = @constinferred add(y, x, _one, β)
+    @test deepcollect(z) ≈ muladd.(deepcollect(y), β, deepcollect(x))
+    z = @constinferred add(y, x, α, _one)
+    @test deepcollect(z) ≈ muladd.(deepcollect(x), α, deepcollect(y))
+    z = @constinferred add(y, x, _one, _one)
+    @test all(deepcollect(z) .== deepcollect(x) .+ deepcollect(y))
+
     α, β = randn(2)
     z2 = @constinferred add!!(deepcopy(y), deepcopy(x))
     @test deepcollect(z2) ≈ (deepcollect(x) .+ deepcollect(y))
@@ -93,6 +102,13 @@ end
     @test deepcollect(z2) ≈ (muladd.(deepcollect(x), α, deepcollect(y)))
     z2 = @constinferred add!!(deepcopy(y), deepcopy(x), α, β)
     @test deepcollect(z2) ≈ (muladd.(deepcollect(x), α, deepcollect(y) .* β))
+
+    z = @constinferred add!!(deepcopy(y), deepcopy(x), _one, β)
+    @test deepcollect(z) ≈ muladd.(deepcollect(y), β, deepcollect(x))
+    z = @constinferred add!!(deepcopy(y), deepcopy(x), α, _one)
+    @test deepcollect(z) ≈ muladd.(deepcollect(x), α, deepcollect(y))
+    z = @constinferred add!!(deepcopy(y), deepcopy(x), _one, _one)
+    @test all(deepcollect(z) .== deepcollect(x) .+ deepcollect(y))
 
     α, β = randn(2)
     xy = [deepcopy(x), deepcopy(y)]
