@@ -10,8 +10,8 @@ include("simplevec.jl")
 deepcollect(x) = vcat(map(deepcollect, x)...)
 deepcollect(x::Number) = x
 
-x = SimpleVec(randn(4,4))
-y = SimpleVec(randn(4,4))
+x = SimpleVec(randn(4, 4))
+y = SimpleVec(randn(4, 4))
 
 @testset "scalartype" begin
     s = @constinferred scalartype(x)
