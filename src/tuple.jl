@@ -28,9 +28,9 @@ end
 
 # scale & scale!!
 #-----------------
-scale(x::Tuple, α) = map(xᵢ->scale(xᵢ, α), x)
-scale!!(x::Tuple, α::Number) = map(xᵢ->scale!!(xᵢ, α), x)
-function scale!!(y::Tuple, x::Tuple, α::Number)
+scale(x::Tuple, α::ONumber) = map(xᵢ->scale(xᵢ, α), x)
+scale!!(x::Tuple, α::ONumber) = map(xᵢ->scale!!(xᵢ, α), x)
+function scale!!(y::Tuple, x::Tuple, α::ONumber)
     if length(y) == length(x)
         yx = ntuple(i->(y[i], x[i]), length(x))
         return map(yxᵢ->scale!!(yxᵢ[1], yxᵢ[2], α), yx)

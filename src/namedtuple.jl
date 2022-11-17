@@ -18,9 +18,9 @@ end
 
 # scale & scale!!
 #-----------------
-scale(x::NamedTuple, α) = NamedTuple{keys(x)}(map(xᵢ->scale(xᵢ, α), values(x)))
-scale!!(x::NamedTuple, α::Number) = NamedTuple{keys(x)}(map(xᵢ->scale!!(xᵢ, α), values(x)))
-function scale!!(y::NamedTuple{names}, x::NamedTuple{names}, α::Number) where {names}
+scale(x::NamedTuple, α::ONumber) = NamedTuple{keys(x)}(map(xᵢ->scale(xᵢ, α), values(x)))
+scale!!(x::NamedTuple, α::ONumber) = NamedTuple{keys(x)}(map(xᵢ->scale!!(xᵢ, α), values(x)))
+function scale!!(y::NamedTuple{names}, x::NamedTuple{names}, α::ONumber) where {names}
     xvals = values(x)
     yvals = values(y)
     yxvals = ntuple(i->(yvals[i], xvals[i]), length(x))

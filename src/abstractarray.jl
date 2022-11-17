@@ -24,22 +24,22 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 
 # scale, scale! & scale!!
 #-------------------------
-scale(x::AbstractArray, α::Number) = scale.(x, α)
+scale(x::AbstractArray, α::ONumber) = scale.(x, α)
 
-function scale!(x::BLASVector, α::Number)
+function scale!(x::BLASVector, α::ONumber)
     LinearAlgebra.rmul!(x, convert(eltype(x), α))
     return x
 end
-function scale!(x::AbstractArray, α::Number)
+function scale!(x::AbstractArray, α::ONumber)
     x .= scale!!.(x, α)
     return x
 end
-function scale!(y::AbstractArray, x::AbstractArray, α::Number)
+function scale!(y::AbstractArray, x::AbstractArray, α::ONumber)
     y .= scale!!.(y, x, α)
     return y
 end
 
-function scale!!(x::AbstractArray, α::Number)
+function scale!!(x::AbstractArray, α::ONumber)
     T = scalartype(x)
     if promote_type(T, typeof(α)) <: T
         return scale!(x, α)
@@ -47,7 +47,7 @@ function scale!!(x::AbstractArray, α::Number)
         return scale!!.(x, α)
     end
 end
-function scale!!(y::AbstractArray, x::AbstractArray, α::Number)
+function scale!!(y::AbstractArray, x::AbstractArray, α::ONumber)
     T = scalartype(y)
     if promote_type(T, typeof(α), scalartype(x)) <: T
         return scale!(y, x, α)

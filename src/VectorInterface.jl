@@ -31,7 +31,7 @@ include("abstractarray.jl")
 include("tuple.jl")
 include("namedtuple.jl")
 
-# General fallback implementation: currently disabled
-# include("fallbacks.jl")
+# General fallback implementation: comes with warning and some overhead
+include("fallbacks.jl")
 
 end

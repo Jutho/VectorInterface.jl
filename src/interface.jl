@@ -80,8 +80,8 @@ Also see: [`scale`](@ref) and [`scale!!`](@ref)
 function scale! end
 
 """
-    scale!!(x, α)
-    scale!!(y, x, α)
+    scale!!(x, α::Number)
+    scale!!(y, x, α::Number)
 
 Rescale `x` with the scalar coefficient `α`, thereby trying to overwrite and thus recylce
 the contents of `x` (in the first form) or `y` (in the second form).  A new object will be

@@ -13,9 +13,10 @@ zerovector!!(x::Number) = zero(x)
 # scale & scale!!
 #-----------------
 # note: the following is required to make scale(NaN, 0) = 0
+scale(x::Number, ::_One) = x
 scale(x::Number, α::Number) = ifelse(iszero(α), zero(x) * α, x * α)
-scale!!(x::Number, α::Number) = scale(x, α)
-scale!!(y::Number, x::Number, α::Number) = scale(x, α)
+scale!!(x::Number, α::ONumber) = scale(x, α)
+scale!!(y::Number, x::Number, α::ONumber) = scale(x, α)
 
 # add & add!!
 #-------------
