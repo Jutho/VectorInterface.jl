@@ -110,7 +110,6 @@ end
     z = @constinferred add!!(deepcopy(y), deepcopy(x), _one, _one)
     @test all(deepcollect(z) .== deepcollect(x) .+ deepcollect(y))
 
-
     α, β = randn(2)
     xy = [deepcopy(x), deepcopy(y)]
     yx = [deepcopy(y), deepcopy(x)]
