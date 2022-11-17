@@ -8,7 +8,7 @@ scalartype(::Type{A}) where {T,A<:AbstractArray{T}} = scalartype(T) # recursive
 
 # zerovector & zerovector!!
 #---------------------------
-function zerovector(x::AbstractArray, ::Type{S}=scalartype(x)) where {S<:Number}
+function zerovector(x::AbstractArray, ::Type{S}) where {S<:Number}
     return zerovector.(x, S)
 end
 
@@ -24,18 +24,18 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 
 # scale, scale! & scale!!
 #-------------------------
-scale(x::AbstractArray, α::ONumber) = scale.(x, α)
+scale(x::AbstractArray, α::ONumber) = scale.(x, (α,))
 
 function scale!(x::BLASVector, α::ONumber)
     LinearAlgebra.rmul!(x, convert(eltype(x), α))
     return x
 end
 function scale!(x::AbstractArray, α::ONumber)
-    x .= scale!!.(x, α)
+    x .= scale!!.(x, (α,))
     return x
 end
 function scale!(y::AbstractArray, x::AbstractArray, α::ONumber)
-    y .= scale!!.(y, x, α)
+    y .= scale!!.(y, x, (α,))
     return y
 end
 
@@ -44,7 +44,7 @@ function scale!!(x::AbstractArray, α::ONumber)
     if promote_type(T, typeof(α)) <: T
         return scale!(x, α)
     else
-        return scale!!.(x, α)
+        return scale!!.(x, (α,))
     end
 end
 function scale!!(y::AbstractArray, x::AbstractArray, α::ONumber)
@@ -52,7 +52,7 @@ function scale!!(y::AbstractArray, x::AbstractArray, α::ONumber)
     if promote_type(T, typeof(α), scalartype(x)) <: T
         return scale!(y, x, α)
     else
-        return scale!!.(y, x, α)
+        return scale!!.(y, x, (α,))
     end
 end
 

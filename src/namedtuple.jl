@@ -9,7 +9,7 @@ scalartype(::Type{NamedTuple{names,T}}) where {names,T<:Tuple} = scalartype(T)
 
 # zerovector & zerovector!!
 #---------------------------
-function zerovector(x::NamedTuple, ::Type{S}=scalartype(x)) where {S<:Number}
+function zerovector(x::NamedTuple, ::Type{S}) where {S<:Number}
     return NamedTuple{keys(x)}(zerovector(values(x), S))
 end
 function zerovector!!(x::NamedTuple)

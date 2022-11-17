@@ -19,7 +19,7 @@ end
 
 # zerovector & zerovector!!
 #---------------------------
-function zerovector(x::Tuple, ::Type{S}=scalartype(x)) where {S<:Number}
+function zerovector(x::Tuple, ::Type{S}) where {S<:Number}
     y = map(xᵢ -> zerovector(xᵢ, S), x)
     return y
 end

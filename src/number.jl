@@ -7,7 +7,7 @@ scalartype(::Type{T}) where {T<:Number} = T
 
 # zerovector & zerovector!!
 #---------------------------
-zerovector(x::Number, ::Type{S}=scalartype(x)) where {S<:Number} = zero(S)
+zerovector(x::Number, ::Type{S}) where {S<:Number} = zero(S)
 zerovector!!(x::Number) = zero(x)
 
 # scale & scale!!
