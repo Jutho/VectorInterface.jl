@@ -5,8 +5,9 @@
 # They do not enforce any compatibility between the different vector types
 
 @noinline function _warn_message(fun, type)
-    return string("The function `", fun, "` is not implemented for (values of) type `", type,
-                  "`; this fallback will disappear in future versions of VectorInterface.jl")
+    return string("The function `", fun,
+                  "` is not implemented for (values of) type `", type, "`;\n",
+                  "this fallback will disappear in future versions of VectorInterface.jl")
 end
 @noinline function _error_message(fun, type)
     return string("No fallback for applying `", fun, "` to (values of) type `", type,
@@ -219,7 +220,7 @@ function add!!(y, x, α::ONumber, β::ONumber)
         Tx = scalartype(x)
         Ty = scalartype(y)
         if applicable(LinearAlgebra.axpby!, α′, x, β, y) &&
-                promote_type(typeof(α), Tx, typeof(β), Ty) <: Ty
+           promote_type(typeof(α), Tx, typeof(β), Ty) <: Ty
             T = Tuple{typeof(y),typeof(x),typeof(α′),typeof(β)}
             @warn _warn_message(add!!, T) maxlog = 1
             return LinearAlgebra.axpby!(α′, x, β, y)
