@@ -96,7 +96,7 @@ With VectorInterface.jl, I have tried to create a simple package to resolve my g
 
 These methods are implemented for instances `v` of type `<:Number` (scalars are also vectors over themselves) and `<:AbstractArray` (both `<:AbstractArray{<:Number}` and nested array).
 
-In addition, the interface is currently also defined for tuples, again with arbitrary nesting. So instances of e.g. `Vector{NTuple{3,Matrix{Float64}}}` are currently also supported.
+In addition, the interface is currently also defined for tuples and named tuples, again with arbitrary nesting. So instances of e.g. `Vector{NTuple{3,Matrix{Float64}}}` are currently also supported.
 
 Furthermore, in-place methods will work recursively so as to try to maximally work in place. What I mean by that is, if you have nested vectors, say `v = [[1., 2.], [3., 4.]]`, then `rmul!(v, 0.5)` will keep the outer array, but will work on the inner arrays using regular `*` multiplication, and will thus allocate two new inner arrays in this example. In contrast, `scale!(v, 0.5)` does work in-place on the inner arrays and is free of allocations.
 
@@ -104,11 +104,15 @@ Similarly, for `v = ((1., 2.), [3., 4.])`, `scale!!(v, 0.5)` could of course not
 
 ### Open questions
 
-However, I have various questions about which I have not yet made up my mind:
+Upon development, there were several decisions to be made, about which I was not sure.
 * Should tuples actually be supported? In Base, they are not treated as vectors, though they are supported by `dot` and `norm`.
+  -> Currently, tuples and even named tuples are supported (which was a request)
 * Should there be some `vectordim` function (name up to debate) to probe the vector space dimension?
+  -> No such function is currently defined
 * Should `LinearAlgebra.dot` be exported? Or should `inner` just become `dot` and should and is the looseness of `dot` of no concern?
+  -> `dot` is currently not exported; `inner` is the preferred method for inner products
 * Should there be fallbacks in place for user types that did already implement `rmul!`, `mul!`, `axpy!`, `axpby!` and `dot` (the latter relating to the previous question)?
+  -> Currently, there is a fallback to these methods, but with the intention to remove these fallbacks in future versions.
 
 All thoughts and comments are very welcome.
 
