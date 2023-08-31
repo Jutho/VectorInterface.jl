@@ -16,7 +16,14 @@ function zerovector!(x::AbstractArray{<:Number})
     return fill!(x, zero(scalartype(x)))
 end
 function zerovector!(x::AbstractArray)
-    x .= zerovector!!.(x)
+    T = eltype(x)
+    for I in eachindex(x)
+        if isbitstype(T) || isassigned(x, I)
+            x[I] = zerovector!!(x[I])
+        else
+            x[I] = zero(eltype(x))
+        end
+    end
     return x
 end
 
@@ -24,22 +31,25 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 
 # scale, scale! & scale!!
 #-------------------------
-scale(x::AbstractArray, α::ONumber) = scale.(x, (α,))
+scale(x::AbstractArray, α::Number) = scale.(x, (α,))
 
-function scale!(x::BLASVector, α::ONumber)
+function scale!(x::BLASVector, α::Number)
+    (α === _one) && return x
     LinearAlgebra.rmul!(x, convert(eltype(x), α))
     return x
 end
-function scale!(x::AbstractArray, α::ONumber)
+function scale!(x::AbstractArray, α::Number)
+    (α === _one) && return x
     x .= scale!!.(x, (α,))
     return x
 end
-function scale!(y::AbstractArray, x::AbstractArray, α::ONumber)
+function scale!(y::AbstractArray, x::AbstractArray, α::Number)
     y .= scale!!.(y, x, (α,))
     return y
 end
 
-function scale!!(x::AbstractArray, α::ONumber)
+function scale!!(x::AbstractArray, α::Number)
+    (α === _one) && return x
     T = scalartype(x)
     if promote_type(T, typeof(α)) <: T
         return scale!(x, α)
@@ -47,7 +57,7 @@ function scale!!(x::AbstractArray, α::ONumber)
         return scale!!.(x, (α,))
     end
 end
-function scale!!(y::AbstractArray, x::AbstractArray, α::ONumber)
+function scale!!(y::AbstractArray, x::AbstractArray, α::Number)
     T = scalartype(y)
     if promote_type(T, typeof(α), scalartype(x)) <: T
         return scale!(y, x, α)
@@ -58,7 +68,7 @@ end
 
 # add, add! & add!!
 #-------------------
-function add(y::AbstractArray, x::AbstractArray, α::ONumber=_one, β::ONumber=_one)
+function add(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_one)
     ax = axes(x)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Output axes $ay differ from input axes $ax"))
@@ -67,17 +77,16 @@ end
 
 # Special case: simple numerical arrays with BLAS-compatible floating point type
 function add!(y::BLASVector{T}, x::BLASVector{T},
-              α::ONumber=_one, β::_One=_one) where {T<:BlasFloat}
-    LinearAlgebra.axpy!(convert(T, α), x, y)
-    return y
-end
-function add!(y::BLASVector{T}, x::BLASVector{T},
-              α::ONumber, β::Number) where {T<:BlasFloat}
-    LinearAlgebra.axpby!(convert(T, α), x, convert(T, β), y)
+              α::Number, β::Number) where {T<:BlasFloat}
+    if β === _one
+        LinearAlgebra.axpy!(convert(T, α), x, y)
+    else
+        LinearAlgebra.axpby!(convert(T, α), x, convert(T, β), y)
+    end
     return y
 end
 # General case:
-function add!(y::AbstractArray, x::AbstractArray, α::ONumber=_one, β::ONumber=_one)
+function add!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_one)
     ax = axes(x)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Output axes $ay differ from input axes $ax"))
@@ -85,7 +94,7 @@ function add!(y::AbstractArray, x::AbstractArray, α::ONumber=_one, β::ONumber=
     return y
 end
 
-function add!!(y::AbstractArray, x::AbstractArray, α::ONumber=_one, β::ONumber=_one)
+function add!!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_one)
     T = scalartype(y)
     if promote_type(T, typeof(α), typeof(β), scalartype(x)) <: T
         return add!(y, x, α, β)

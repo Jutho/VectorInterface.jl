@@ -18,11 +18,11 @@ end
 
 # scale & scale!!
 #-----------------
-scale(x::NamedTuple, α::ONumber) = NamedTuple{keys(x)}(map(xᵢ -> scale(xᵢ, α), values(x)))
-function scale!!(x::NamedTuple, α::ONumber)
+scale(x::NamedTuple, α::Number) = NamedTuple{keys(x)}(map(xᵢ -> scale(xᵢ, α), values(x)))
+function scale!!(x::NamedTuple, α::Number)
     return NamedTuple{keys(x)}(map(xᵢ -> scale!!(xᵢ, α), values(x)))
 end
-function scale!!(y::NamedTuple{names}, x::NamedTuple{names}, α::ONumber) where {names}
+function scale!!(y::NamedTuple{names}, x::NamedTuple{names}, α::Number) where {names}
     xvals = values(x)
     yvals = values(y)
     yxvals = ntuple(i -> (yvals[i], xvals[i]), length(x))
@@ -32,14 +32,14 @@ end
 # add & add!!
 #-------------
 function add(y::NamedTuple{names}, x::NamedTuple{names},
-             α::ONumber=_one, β::ONumber=_one) where {names}
+             α::Number=_one, β::Number=_one) where {names}
     xvals = values(x)
     yvals = values(y)
     yxvals = ntuple(i -> (yvals[i], xvals[i]), length(x))
     return NamedTuple{names}(map(yxᵢ -> add(yxᵢ[1], yxᵢ[2], α, β), yxvals))
 end
 function add!!(y::NamedTuple{names}, x::NamedTuple{names},
-               α::ONumber=_one, β::ONumber=_one) where {names}
+               α::Number=_one, β::Number=_one) where {names}
     xvals = values(x)
     yvals = values(y)
     yxvals = ntuple(i -> (yvals[i], xvals[i]), length(x))

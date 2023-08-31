@@ -30,9 +30,9 @@ end
 
 # scale & scale!!
 #-----------------
-scale(x::Tuple, α::ONumber) = map(xᵢ -> scale(xᵢ, α), x)
-scale!!(x::Tuple, α::ONumber) = map(xᵢ -> scale!!(xᵢ, α), x)
-function scale!!(y::Tuple, x::Tuple, α::ONumber)
+scale(x::Tuple, α::Number) = map(xᵢ -> scale(xᵢ, α), x)
+scale!!(x::Tuple, α::Number) = map(xᵢ -> scale!!(xᵢ, α), x)
+function scale!!(y::Tuple, x::Tuple, α::Number)
     lx = length(x)
     ly = length(y)
     lx == ly || throw(DimensionMismatch("non-matching tuple lengths $lx and $ly"))
@@ -42,14 +42,14 @@ end
 
 # add & add!!
 #-------------
-function add(y::Tuple, x::Tuple, α::ONumber=_one, β::ONumber=_one)
+function add(y::Tuple, x::Tuple, α::Number=_one, β::Number=_one)
     lx = length(x)
     ly = length(y)
     lx == ly || throw(DimensionMismatch("non-matching tuple lengths $lx and $ly"))
     yx = ntuple(i -> (y[i], x[i]), lx)
     return map(yxᵢ -> add(yxᵢ[1], yxᵢ[2], α, β), yx)
 end
-function add!!(y::Tuple, x::Tuple, α::ONumber=_one, β::ONumber=_one)
+function add!!(y::Tuple, x::Tuple, α::Number=_one, β::Number=_one)
     lx = length(x)
     ly = length(y)
     lx == ly || throw(DimensionMismatch("non-matching tuple lengths $lx and $ly"))
