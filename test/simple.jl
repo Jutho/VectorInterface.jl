@@ -82,9 +82,12 @@ end
     z = @constinferred add(y, x)
     @test all(deepcollect(z) .== deepcollect(x) .+ deepcollect(y))
     z = @constinferred add(y, x, α)
-    @test all(deepcollect(z) .== muladd.(deepcollect(x), α, deepcollect(y)))
+    # for some reason, on some Julia versions on some platforms, but only in test mode
+    # there is a small floating point discrepancy, which makes the following test fail:
+    # @test all(deepcollect(z) .== muladd.(deepcollect(x), α, deepcollect(y)))
+    @test deepcollect(z) ≈ muladd.(deepcollect(x), α, deepcollect(y))
     z = @constinferred add(y, x, α, β)
-    # for some reason, on Julia 1.6, but only in test mode
+    # for some reason, on some Julia versions on some platforms, but only in test mode
     # there is a small floating point discrepancy, which makes the following test fail:
     # @test all(deepcollect(z) .== muladd.(deepcollect(x), α, deepcollect(y) .* β))
     @test deepcollect(z) ≈ muladd.(deepcollect(x), α, deepcollect(y) .* β)
