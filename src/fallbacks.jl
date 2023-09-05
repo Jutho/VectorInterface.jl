@@ -115,7 +115,7 @@ function scale!!(y, x, α::Number)
     @warn _warn_message(scale!!, T) maxlog = 1
     Tx = scalartype(x)
     Ty = scalartype(y)
-    if applicable(LinearAlgebra.mul!, y, x, α) && promote_type(Ty, Tx, typeof(α)) <: Ty
+    if applicable(LinearAlgebra.mul!, y, x, α) && Base.promote_op(scale, Tx, Ty, scalartype(α)) <: Ty
         return LinearAlgebra.mul!(y, x, α)
     elseif applicable(*, x, α)
         return x * α
@@ -171,7 +171,7 @@ function add!!(y, x)
     @warn _warn_message(add!!, T) maxlog = 1
     Tx = scalartype(x)
     Ty = scalartype(y)
-    if applicable(LinearAlgebra.axpy!, true, x, y) && promote_type(Tx, Ty) <: Ty
+    if applicable(LinearAlgebra.axpy!, true, x, y) && Base.promote_op(add, Tx, Ty) <: Ty
         return LinearAlgebra.axpy!(true, x, y)
     elseif applicable(+, y, x)
         return y + x
@@ -186,7 +186,7 @@ function add!!(y, x, α::Number)
     else
         Tx = scalartype(x)
         Ty = scalartype(y)
-        if applicable(LinearAlgebra.axpy!, α, x, y) && promote_type(typeof(α), Tx, Ty) <: Ty
+        if applicable(LinearAlgebra.axpy!, α, x, y) && Base.promote_op(add, Ty, Tx, scalartype(α)) <: Ty
             T = Tuple{typeof(y),typeof(x),typeof(α)}
             @warn _warn_message(add!!, T) maxlog = 1
             return LinearAlgebra.axpy!(α, x, y)
@@ -204,7 +204,7 @@ function add!!(y, x, α::Number, β::Number)
         Tx = scalartype(x)
         Ty = scalartype(y)
         if applicable(LinearAlgebra.axpby!, α′, x, β, y) &&
-           promote_type(typeof(α), Tx, typeof(β), Ty) <: Ty
+           Base.promote_op(add, Ty, Tx, scalartype(α), scalartype(β)) <: Ty
             T = Tuple{typeof(y),typeof(x),typeof(α′),typeof(β)}
             @warn _warn_message(add!!, T) maxlog = 1
             return LinearAlgebra.axpby!(α′, x, β, y)

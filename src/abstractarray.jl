@@ -43,18 +43,16 @@ function scale!(y::AbstractArray, x::AbstractArray, α::Number)
     return y
 end
 
-function scale!!(x::AbstractArray, α::Number)
+function scale!!(x::AbstractArray, α::ONumber)
     (α === _one) && return x
-    T = scalartype(x)
-    if promote_type(T, typeof(α)) <: T
+    if Base.promote_op(scale, scalartype(x), typeof(α)) <: scalartype(x)
         return scale!(x, α)
     else
         return scale!!.(x, (α,))
     end
 end
-function scale!!(y::AbstractArray, x::AbstractArray, α::Number)
-    T = scalartype(y)
-    if promote_type(T, typeof(α), scalartype(x)) <: T
+function scale!!(y::AbstractArray, x::AbstractArray, α::ONumber)
+    if Base.promote_op(scale, scalartype(x), typeof(α)) <: scalartype(y)
         return scale!(y, x, α)
     else
         return scale!!.(y, x, (α,))
@@ -89,9 +87,8 @@ function add!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_o
     return y
 end
 
-function add!!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_one)
-    T = scalartype(y)
-    if promote_type(T, typeof(α), typeof(β), scalartype(x)) <: T
+function add!!(y::AbstractArray, x::AbstractArray, α::ONumber=_one, β::ONumber=_one)
+    if Base.promote_op(add, scalartype(y), scalartype(x), scalartype(α), scalartype(β)) <: scalartype(y)
         return add!(y, x, α, β)
     else
         ax = axes(x)
@@ -110,7 +107,7 @@ function inner(x::AbstractArray, y::AbstractArray)
     ax = axes(x)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Non-matching axes $ax and $ay"))
-    T = promote_type(scalartype(x), scalartype(y))
+    T = Base.promote_op(inner, scalartype(x), scalartype(y))
     s::T = zero(T)
     for I in eachindex(x)
         s += inner(x[I], y[I])
