@@ -33,11 +33,6 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 #-------------------------
 scale(x::AbstractArray, α::Number) = scale.(x, (α,))
 
-function scale!(x::BLASVector, α::Number)
-    (α === _one) && return x
-    LinearAlgebra.BLAS.scal!(convert(eltype(x), α), x)
-    return x
-end
 function scale!(x::AbstractArray, α::Number)
     (α === _one) && return x
     x .= scale!!.(x, (α,))
