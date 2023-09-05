@@ -17,6 +17,7 @@ include("interface.jl")
 const _one = static(1)
 const _One = typeof(_one)
 const _zero = static(0)
+const _Zero = typeof(_zero)
 
 # Specific implementations for Base types / type hierarchies
 include("number.jl")

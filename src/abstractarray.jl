@@ -35,7 +35,7 @@ scale(x::AbstractArray, α::Number) = scale.(x, (α,))
 
 function scale!(x::BLASVector, α::Number)
     (α === _one) && return x
-    LinearAlgebra.rmul!(x, convert(eltype(x), α))
+    LinearAlgebra.BLAS.scal!(convert(eltype(x), α), x)
     return x
 end
 function scale!(x::AbstractArray, α::Number)
