@@ -63,7 +63,6 @@ function inner(x::Tuple, y::Tuple)
     lx = length(x)
     ly = length(y)
     lx == ly || throw(DimensionMismatch("non-matching tuple lengths $lx and $ly"))
-    T = promote_type(scalartype(x), scalartype(y))
     xy = ntuple(i -> (x[i], y[i]), lx)
     return sum(map(xyᵢ -> inner(xyᵢ[1], xyᵢ[2]), xy))
 end

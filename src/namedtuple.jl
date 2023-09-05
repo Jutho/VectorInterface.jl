@@ -49,7 +49,6 @@ end
 # inner
 #-------
 function inner(x::NamedTuple{names}, y::NamedTuple{names}) where {names}
-    T = promote_type(scalartype(x), scalartype(y))
     xvals = values(x)
     yvals = values(y)
     xyvals = ntuple(i -> (xvals[i], yvals[i]), length(x))
