@@ -43,7 +43,7 @@ function scale!(y::AbstractArray, x::AbstractArray, α::Number)
     return y
 end
 
-function scale!!(x::AbstractArray, α::ONumber)
+function scale!!(x::AbstractArray, α::Number)
     (α === _one) && return x
     if Base.promote_op(scale, scalartype(x), typeof(α)) <: scalartype(x)
         return scale!(x, α)
@@ -51,7 +51,7 @@ function scale!!(x::AbstractArray, α::ONumber)
         return scale!!.(x, (α,))
     end
 end
-function scale!!(y::AbstractArray, x::AbstractArray, α::ONumber)
+function scale!!(y::AbstractArray, x::AbstractArray, α::Number)
     if Base.promote_op(scale, scalartype(x), typeof(α)) <: scalartype(y)
         return scale!(y, x, α)
     else
@@ -87,7 +87,7 @@ function add!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_o
     return y
 end
 
-function add!!(y::AbstractArray, x::AbstractArray, α::ONumber=_one, β::ONumber=_one)
+function add!!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_one)
     if Base.promote_op(add, scalartype(y), scalartype(x), scalartype(α), scalartype(β)) <: scalartype(y)
         return add!(y, x, α, β)
     else
