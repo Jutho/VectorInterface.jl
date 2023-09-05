@@ -91,7 +91,8 @@ function scale!!(x, α::Number)
     T = Tuple{typeof(x),typeof(α)}
     @warn _warn_message(scale!!, T) maxlog = 1
     Tx = scalartype(x)
-    if applicable(LinearAlgebra.rmul!, x, α) && promote_type(Tx, typeof(α)) <: Tx
+    if applicable(LinearAlgebra.rmul!, x, α) &&
+       Base.promote_op(scale, Tx, scalartype(α)) <: Tx
         return LinearAlgebra.rmul!(x, α)
     elseif applicable(*, x, α)
         return x * α
@@ -115,7 +116,8 @@ function scale!!(y, x, α::Number)
     @warn _warn_message(scale!!, T) maxlog = 1
     Tx = scalartype(x)
     Ty = scalartype(y)
-    if applicable(LinearAlgebra.mul!, y, x, α) && Base.promote_op(scale, Tx, Ty, scalartype(α)) <: Ty
+    if applicable(LinearAlgebra.mul!, y, x, α) &&
+       Base.promote_op(scale, Tx, scalartype(α)) <: Ty
         return LinearAlgebra.mul!(y, x, α)
     elseif applicable(*, x, α)
         return x * α
@@ -186,7 +188,8 @@ function add!!(y, x, α::Number)
     else
         Tx = scalartype(x)
         Ty = scalartype(y)
-        if applicable(LinearAlgebra.axpy!, α, x, y) && Base.promote_op(add, Ty, Tx, scalartype(α)) <: Ty
+        if applicable(LinearAlgebra.axpy!, α, x, y) &&
+           Base.promote_op(add, Ty, Tx, scalartype(α)) <: Ty
             T = Tuple{typeof(y),typeof(x),typeof(α)}
             @warn _warn_message(add!!, T) maxlog = 1
             return LinearAlgebra.axpy!(α, x, y)

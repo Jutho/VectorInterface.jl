@@ -88,7 +88,8 @@ function add!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_o
 end
 
 function add!!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_one)
-    if Base.promote_op(add, scalartype(y), scalartype(x), scalartype(α), scalartype(β)) <: scalartype(y)
+    if Base.promote_op(add, scalartype(y), scalartype(x), scalartype(α), scalartype(β)) <:
+       scalartype(y)
         return add!(y, x, α, β)
     else
         ax = axes(x)
