@@ -138,7 +138,7 @@ end
 function add!(y, x, α::Number, β::Number)
     T = Tuple{typeof(y),typeof(x),typeof(α),typeof(β)}
     @warn _warn_message(add!, T) maxlog = 1
-    
+
     α′ = (α === One()) ? true : α
     if β === One()
         if applicable(LinearAlgebra.axpy!, α′, x, y)
@@ -158,7 +158,7 @@ end
 function add!!(y, x, α::Number, β::Number)
     T = Tuple{typeof(y),typeof(x),typeof(α),typeof(β)}
     @warn _warn_message(add!!, T) maxlog = 1
-    
+
     if β === One() && α === One()
         if applicable(LinearAlgebra.axpy!, true, x, y) && promote_add(y, x) <: scalartype(y)
             return LinearAlgebra.axpy!(true, x, y)
@@ -191,7 +191,7 @@ end
 function inner(x, y)
     T = Tuple{typeof(x),typeof(y)}
     @warn _warn_message(inner, T) maxlog = 1
-    
+
     if applicable(LinearAlgebra.dot, x, y)
         return LinearAlgebra.dot(x, y)
     else
