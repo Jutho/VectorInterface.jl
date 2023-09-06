@@ -43,4 +43,6 @@ Base.zero(::Type{<:Union{One,Zero}}) = Zero()
 # ---------
 Base.promote_rule(::Type{T₁}, ::Type{T₂}) where {T₁<:Union{One,Zero},T₂<:Number} = promote_rule(Int, T₂)
 Base.convert(::Type{T}, ::One) where {T<:Number} = one(T)
+(T::Type{<:Number})(::One) = one(T)
 Base.convert(::Type{T}, ::Zero) where {T<:Number} = zero(T)
+(T::Type{<:Number})(::Zero) = zero(T)
