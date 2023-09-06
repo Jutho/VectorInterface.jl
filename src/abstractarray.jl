@@ -32,9 +32,8 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 # scale, scale! & scale!!
 #-------------------------
 scale(x::AbstractArray, α::Number) = scale.(x, (α,))
-
 function scale!(x::AbstractArray, α::Number)
-    (α === _one) && return x
+    α === One() && return x
     x .= scale!!.(x, (α,))
     return x
 end
@@ -44,17 +43,15 @@ function scale!(y::AbstractArray, x::AbstractArray, α::Number)
 end
 
 function scale!!(x::AbstractArray, α::Number)
-    (α === _one) && return x
-    T = scalartype(x)
-    if promote_type(T, typeof(α)) <: T
+    α === One() && return x
+    if promote_scale(x, α) <: scalartype(x)
         return scale!(x, α)
     else
         return scale!!.(x, (α,))
     end
 end
 function scale!!(y::AbstractArray, x::AbstractArray, α::Number)
-    T = scalartype(y)
-    if promote_type(T, typeof(α), scalartype(x)) <: T
+    if promote_scale(x, α) <: scalartype(y)
         return scale!(y, x, α)
     else
         return scale!!.(y, x, (α,))
@@ -63,7 +60,7 @@ end
 
 # add, add! & add!!
 #-------------------
-function add(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_one)
+function add(y::AbstractArray, x::AbstractArray, α::Number, β::Number)
     ax = axes(x)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Output axes $ay differ from input axes $ax"))
@@ -72,16 +69,16 @@ end
 
 # Special case: simple numerical arrays with BLAS-compatible floating point type
 function add!(y::BLASVector{T}, x::BLASVector{T},
-              α::Number=_one, β::Number=_one) where {T<:BlasFloat}
-    if β === _one
-        LinearAlgebra.axpy!(convert(T, α), x, y)
+              α::Number, β::Number) where {T<:BlasFloat}
+    if β === One()
+        LinearAlgebra.axpy!(α, x, y)
     else
-        LinearAlgebra.axpby!(convert(T, α), x, convert(T, β), y)
+        LinearAlgebra.axpby!(α, x, convert(T, β), y)
     end
     return y
 end
 # General case:
-function add!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_one)
+function add!(y::AbstractArray, x::AbstractArray, α::Number, β::Number)
     ax = axes(x)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Output axes $ay differ from input axes $ax"))
@@ -89,9 +86,8 @@ function add!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_o
     return y
 end
 
-function add!!(y::AbstractArray, x::AbstractArray, α::Number=_one, β::Number=_one)
-    T = scalartype(y)
-    if promote_type(T, typeof(α), typeof(β), scalartype(x)) <: T
+function add!!(y::AbstractArray, x::AbstractArray, α::Number, β::Number)
+    if promote_add(y, x, α, β) <: scalartype(y)
         return add!(y, x, α, β)
     else
         ax = axes(x)
@@ -110,7 +106,7 @@ function inner(x::AbstractArray, y::AbstractArray)
     ax = axes(x)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Non-matching axes $ax and $ay"))
-    T = promote_type(scalartype(x), scalartype(y))
+    T = promote_inner(x, y)
     s::T = zero(T)
     for I in eachindex(x)
         s += inner(x[I], y[I])

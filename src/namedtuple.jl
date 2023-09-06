@@ -32,14 +32,14 @@ end
 # add & add!!
 #-------------
 function add(y::NamedTuple{names}, x::NamedTuple{names},
-             α::Number=_one, β::Number=_one) where {names}
+             α::Number, β::Number) where {names}
     xvals = values(x)
     yvals = values(y)
     yxvals = ntuple(i -> (yvals[i], xvals[i]), length(x))
     return NamedTuple{names}(map(yxᵢ -> add(yxᵢ[1], yxᵢ[2], α, β), yxvals))
 end
 function add!!(y::NamedTuple{names}, x::NamedTuple{names},
-               α::Number=_one, β::Number=_one) where {names}
+               α::Number, β::Number) where {names}
     xvals = values(x)
     yvals = values(y)
     yxvals = ntuple(i -> (yvals[i], xvals[i]), length(x))
@@ -49,7 +49,6 @@ end
 # inner
 #-------
 function inner(x::NamedTuple{names}, y::NamedTuple{names}) where {names}
-    T = promote_type(scalartype(x), scalartype(y))
     xvals = values(x)
     yvals = values(y)
     xyvals = ntuple(i -> (xvals[i], yvals[i]), length(x))
