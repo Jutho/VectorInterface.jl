@@ -42,14 +42,14 @@ end
 
 # add & add!!
 #-------------
-function add(y::Tuple, x::Tuple, α::Number=_one, β::Number=_one)
+function add(y::Tuple, x::Tuple, α::Number=One(), β::Number=One())
     lx = length(x)
     ly = length(y)
     lx == ly || throw(DimensionMismatch("non-matching tuple lengths $lx and $ly"))
     yx = ntuple(i -> (y[i], x[i]), lx)
     return map(yxᵢ -> add(yxᵢ[1], yxᵢ[2], α, β), yx)
 end
-function add!!(y::Tuple, x::Tuple, α::Number=_one, β::Number=_one)
+function add!!(y::Tuple, x::Tuple, α::Number=One(), β::Number=One())
     lx = length(x)
     ly = length(y)
     lx == ly || throw(DimensionMismatch("non-matching tuple lengths $lx and $ly"))

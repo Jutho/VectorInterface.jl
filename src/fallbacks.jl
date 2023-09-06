@@ -63,7 +63,7 @@ end
 # scale, scale! & scale!!
 #-------------------------
 function scale(x, α::Number)
-    (α === _one) && return x
+    (α === One()) && return x
     T = Tuple{typeof(x),typeof(α)}
     @warn _warn_message(scale, T) maxlog = 1
     if applicable(*, x, α)
@@ -76,7 +76,7 @@ function scale(x, α::Number)
 end
 
 function scale!(x, α::Number)
-    (α === _one) && return x
+    (α === One()) && return x
     T = Tuple{typeof(x),typeof(α)}
     @warn _warn_message(scale!, T) maxlog = 1
     if applicable(LinearAlgebra.rmul!, x, α)
@@ -87,12 +87,10 @@ function scale!(x, α::Number)
 end
 
 function scale!!(x, α::Number)
-    (α === _one) && return x
+    (α === One()) && return x
     T = Tuple{typeof(x),typeof(α)}
     @warn _warn_message(scale!!, T) maxlog = 1
-    Tx = scalartype(x)
-    if applicable(LinearAlgebra.rmul!, x, α) &&
-       Base.promote_op(scale, Tx, scalartype(α)) <: Tx
+    if applicable(LinearAlgebra.rmul!, x, α) && promote_scale(x, α) <: scalartype(x)
         return LinearAlgebra.rmul!(x, α)
     elseif applicable(*, x, α)
         return x * α
@@ -114,10 +112,7 @@ end
 function scale!!(y, x, α::Number)
     T = Tuple{typeof(y),typeof(x),typeof(α)}
     @warn _warn_message(scale!!, T) maxlog = 1
-    Tx = scalartype(x)
-    Ty = scalartype(y)
-    if applicable(LinearAlgebra.mul!, y, x, α) &&
-       Base.promote_op(scale, Tx, scalartype(α)) <: Ty
+    if applicable(LinearAlgebra.mul!, y, x, α) && promote_scale(x, α) <: scalartype(y)
         return LinearAlgebra.mul!(y, x, α)
     elseif applicable(*, x, α)
         return x * α
@@ -137,31 +132,33 @@ function add(y, x)
         throw(ArgumentError(_error_message(add, T)))
     end
 end
-add(y, x, α::Number) = (α === _one) ? add(y, x) : add(y, scale(x, α))
+add(y, x, α::Number) = (α === One()) ? add(y, x) : add(y, scale(x, α))
 function add(y, x, α::Number, β::Number)
-    yb = (β === _one) ? y : scale(y, β)
-    xa = (α === _one) ? x : scale(x, α)
+    yb = (β === One()) ? y : scale(y, β)
+    xa = (α === One()) ? x : scale(x, α)
     return add(yb, xa)
 end
 
-function add!(y, x, α::Number=_one)
+function add!(y, x, α::Number=One())
     T = Tuple{typeof(y),typeof(x),typeof(α)}
     @warn _warn_message(add!, T) maxlog = 1
-    if applicable(LinearAlgebra.axpy!, α, x, y)
-        return LinearAlgebra.axpy!(α, x, y)
+    α′ = (α === One()) ? true : α
+    if applicable(LinearAlgebra.axpy!, α′, x, y)
+        return LinearAlgebra.axpy!(α′, x, y)
     else
         throw(ArgumentError(_error_message(add!, T)))
     end
 end
 
 function add!(y, x, α::Number, β::Number)
-    if β === _one
+    if β === One()
         return add!(y, x, α)
     else
         T = Tuple{typeof(y),typeof(x),typeof(α),typeof(β)}
         @warn _warn_message(add!, T) maxlog = 1
-        if applicable(LinearAlgebra.axpby!, α, x, β, y)
-            return LinearAlgebra.axpby!(α, x, β, y)
+        α′ = (α === One()) ? true : α
+        if applicable(LinearAlgebra.axpby!, α′, x, β, y)
+            return LinearAlgebra.axpby!(α′, x, β, y)
         else
             throw(ArgumentError(_error_message(add!, T)))
         end
@@ -171,9 +168,7 @@ end
 function add!!(y, x)
     T = Tuple{typeof(y),typeof(x)}
     @warn _warn_message(add!!, T) maxlog = 1
-    Tx = scalartype(x)
-    Ty = scalartype(y)
-    if applicable(LinearAlgebra.axpy!, true, x, y) && Base.promote_op(add, Tx, Ty) <: Ty
+    if applicable(LinearAlgebra.axpy!, true, x, y) && promote_add(y, x) <: scalartype(y)
         return LinearAlgebra.axpy!(true, x, y)
     elseif applicable(+, y, x)
         return y + x
@@ -183,13 +178,10 @@ function add!!(y, x)
 end
 
 function add!!(y, x, α::Number)
-    if α === _one
+    if α === One()
         return add!!(y, x)
     else
-        Tx = scalartype(x)
-        Ty = scalartype(y)
-        if applicable(LinearAlgebra.axpy!, α, x, y) &&
-           Base.promote_op(add, Ty, Tx, scalartype(α)) <: Ty
+        if applicable(LinearAlgebra.axpy!, α, x, y) && promote_add(y, x, α) <: scalartype(y)
             T = Tuple{typeof(y),typeof(x),typeof(α)}
             @warn _warn_message(add!!, T) maxlog = 1
             return LinearAlgebra.axpy!(α, x, y)
@@ -200,15 +192,13 @@ function add!!(y, x, α::Number)
 end
 
 function add!!(y, x, α::Number, β::Number)
-    if β === _one
+    if β === One()
         return add!!(y, x, α)
     else
-        α′ = (α === _one) ? true : α
-        Tx = scalartype(x)
-        Ty = scalartype(y)
+        α′ = (α === One()) ? true : α
         if applicable(LinearAlgebra.axpby!, α′, x, β, y) &&
-           Base.promote_op(add, Ty, Tx, scalartype(α), scalartype(β)) <: Ty
-            T = Tuple{typeof(y),typeof(x),typeof(α′),typeof(β)}
+           promote_add(y, x, α, β) <: scalartype(y)
+            T = Tuple{typeof(y),typeof(x),typeof(α),typeof(β)}
             @warn _warn_message(add!!, T) maxlog = 1
             return LinearAlgebra.axpby!(α′, x, β, y)
         else

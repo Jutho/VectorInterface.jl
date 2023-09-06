@@ -3,7 +3,7 @@ using VectorInterface
 using Test
 using TestExtras
 
-using VectorInterface: _one
+using VectorInterface: One
 
 include("simplevec.jl")
 
@@ -42,11 +42,11 @@ end
     α = randn()
     z = @constinferred scale(x, α)
     @test all(deepcollect(z) .== α .* deepcollect(x))
-    z = @constinferred scale(x, _one)
+    z = @constinferred scale(x, One())
     @test all(deepcollect(z) .== deepcollect(x))
     z2 = @constinferred scale!!(deepcopy(x), α)
     @test deepcollect(z2) ≈ (α .* deepcollect(x))
-    z2 = @constinferred scale!!(deepcopy(x), _one)
+    z2 = @constinferred scale!!(deepcopy(x), One())
     @test all(deepcollect(z2) .== deepcollect(x))
     xcopy = deepcopy(x)
     z2 = @constinferred scale!!(deepcopy(y), xcopy, α)
@@ -54,7 +54,7 @@ end
     @test all(deepcollect(xcopy) .== deepcollect(x))
     z3 = @constinferred scale!(deepcopy(x), α)
     @test deepcollect(z3) ≈ (α .* deepcollect(x))
-    z3 = @constinferred scale!(deepcopy(x), _one)
+    z3 = @constinferred scale!(deepcopy(x), One())
     @test all(deepcollect(z3) .== deepcollect(x))
 
     α = randn(ComplexF64)
@@ -88,13 +88,13 @@ end
     # @test all(deepcollect(z) .== muladd.(deepcollect(x), α, deepcollect(y) .* β))
     @test deepcollect(z) ≈ muladd.(deepcollect(x), α, deepcollect(y) .* β)
 
-    z = @constinferred add(y, x, _one, β)
+    z = @constinferred add(y, x, One(), β)
     @test deepcollect(z) ≈ muladd.(deepcollect(y), β, deepcollect(x))
-    z = @constinferred add(y, x, α, _one)
+    z = @constinferred add(y, x, α, One())
     @test deepcollect(z) ≈ muladd.(deepcollect(x), α, deepcollect(y))
-    z = @constinferred add(y, x, _one, _one)
+    z = @constinferred add(y, x, One(), One())
     @test all(deepcollect(z) .== deepcollect(x) .+ deepcollect(y))
-    z = @constinferred add(y, x, _one)
+    z = @constinferred add(y, x, One())
     @test all(deepcollect(z) .== deepcollect(x) .+ deepcollect(y))
 
     α, β = randn(2)
@@ -105,13 +105,13 @@ end
     z2 = @constinferred add!!(deepcopy(y), deepcopy(x), α, β)
     @test deepcollect(z2) ≈ (muladd.(deepcollect(x), α, deepcollect(y) .* β))
 
-    z2 = @constinferred add!!(deepcopy(y), deepcopy(x), _one, β)
+    z2 = @constinferred add!!(deepcopy(y), deepcopy(x), One(), β)
     @test deepcollect(z2) ≈ muladd.(deepcollect(y), β, deepcollect(x))
-    z2 = @constinferred add!!(deepcopy(y), deepcopy(x), α, _one)
+    z2 = @constinferred add!!(deepcopy(y), deepcopy(x), α, One())
     @test deepcollect(z2) ≈ muladd.(deepcollect(x), α, deepcollect(y))
-    z2 = @constinferred add!!(deepcopy(y), deepcopy(x), _one, _one)
+    z2 = @constinferred add!!(deepcopy(y), deepcopy(x), One(), One())
     @test all(deepcollect(z2) .== deepcollect(x) .+ deepcollect(y))
-    z2 = @constinferred add!!(deepcopy(y), deepcopy(x), _one)
+    z2 = @constinferred add!!(deepcopy(y), deepcopy(x), One())
     @test all(deepcollect(z2) .== deepcollect(x) .+ deepcollect(y))
 
     α, β = randn(2)
@@ -122,13 +122,13 @@ end
     z3 = @constinferred add!(deepcopy(y), deepcopy(x), α, β)
     @test deepcollect(z3) ≈ (muladd.(deepcollect(x), α, deepcollect(y) .* β))
 
-    z3 = @constinferred add!!(deepcopy(y), deepcopy(x), _one, β)
+    z3 = @constinferred add!!(deepcopy(y), deepcopy(x), One(), β)
     @test deepcollect(z3) ≈ muladd.(deepcollect(y), β, deepcollect(x))
-    z3 = @constinferred add!!(deepcopy(y), deepcopy(x), α, _one)
+    z3 = @constinferred add!!(deepcopy(y), deepcopy(x), α, One())
     @test deepcollect(z3) ≈ muladd.(deepcollect(x), α, deepcollect(y))
-    z3 = @constinferred add!!(deepcopy(y), deepcopy(x), _one, _one)
+    z3 = @constinferred add!!(deepcopy(y), deepcopy(x), One(), One())
     @test all(deepcollect(z3) .== deepcollect(x) .+ deepcollect(y))
-    z3 = @constinferred add!!(deepcopy(y), deepcopy(x), _one)
+    z3 = @constinferred add!!(deepcopy(y), deepcopy(x), One())
     @test all(deepcollect(z3) .== deepcollect(x) .+ deepcollect(y))
 
     α, β = randn(ComplexF64, 2)
