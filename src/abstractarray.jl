@@ -71,9 +71,9 @@ end
 function add!(y::BLASVector{T}, x::BLASVector{T},
               α::Number, β::Number) where {T<:BlasFloat}
     if β === One()
-        LinearAlgebra.axpy!(α, x, y)
+        LinearAlgebra.axpy!(convert(T, α), x, y)
     else
-        LinearAlgebra.axpby!(α, x, convert(T, β), y)
+        LinearAlgebra.axpby!(convert(T, α), x, convert(T, β), y)
     end
     return y
 end
