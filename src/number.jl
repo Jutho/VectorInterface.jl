@@ -7,7 +7,7 @@ scalartype(::Type{T}) where {T<:Number} = T
 
 # zerovector & zerovector!!
 #---------------------------
-@inline zerovector(x::Number, ::Type{S}) where {S<:Number} = zero(S)
+@inline zerovector(::Number, ::Type{S}) where {S<:Number} = zero(S)
 @inline zerovector!!(x::Number) = zero(x)
 
 # scale & scale!!
@@ -18,15 +18,13 @@ scalartype(::Type{T}) where {T<:Number} = T
 
 # add & add!!
 #-------------
-@inline add(y::Number, x::Number) = y + x
-@inline add(y::Number, x::Number, ::One) = add(y, x)
-@inline function add(y::Number, x::Number, α::Number)
+@inline add(y::Number, x::Number, ::One, ::One) = y + x
+# @inline add(y::Number, x::Number, ::One, β::Number) = add(x, y, β)
+@inline function add(y::Number, x::Number, α::Number, ::One)
     return iszero(α) ? muladd(zero(x), α, y) : muladd(x, α, y) # required to make zero coefficients kill NaN values in x or y
 end
 @inline add(y::Number, x::Number, α::Number, β::Number) = add(scale(y, β), x, α)
 
-@inline add!!(y::Number, x::Number) = add(y, x)
-@inline add!!(y::Number, x::Number, α::Number) = add(y, x, α)
 @inline add!!(y::Number, x::Number, α::Number, β::Number) = add(y, x, α, β)
 
 # inner

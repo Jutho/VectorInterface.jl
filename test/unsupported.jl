@@ -3,8 +3,6 @@ using VectorInterface
 using Test
 using TestExtras
 
-using VectorInterface: One
-
 include("simplevec.jl")
 
 deepcollect(x) = vcat(map(deepcollect, x)...)
