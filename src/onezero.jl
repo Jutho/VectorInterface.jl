@@ -41,11 +41,14 @@ Base.one(x::Union{One,Zero}) = one(typeof(x))
 Base.zero(::Type{<:Union{One,Zero}}) = Zero()
 Base.zero(x::Union{One,Zero}) = zero(typeof(x))
 
+Base.:(==)(::One, ::One) = true
+Base.:(==)(::Zero, ::Zero) = true
+Base.:(==)(::One, ::Zero) = false
+Base.:(==)(::Zero, ::One) = false
+
 # Promotion
 # ---------
-function Base.promote_rule(::Type{T₁}, ::Type{T₂}) where {T₁<:Union{One,Zero},T₂<:Number}
-    return promote_rule(Int, T₂)
-end
+Base.promote_rule(::Type{<:Union{One,Zero}}, ::Type{T}) where {T<:Number} = T
 Base.convert(::Type{T}, ::One) where {T<:Number} = one(T)
 (T::Type{<:Number})(::One) = one(T)
 Base.convert(::Type{T}, ::Zero) where {T<:Number} = zero(T)
