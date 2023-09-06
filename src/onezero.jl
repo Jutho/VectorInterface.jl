@@ -37,7 +37,9 @@ Base.conj(::One) = One()
 Base.conj(::Zero) = Zero()
 
 Base.one(::Type{<:Union{One,Zero}}) = One()
+Base.one(x::Union{One,Zero}) = one(typeof(x))
 Base.zero(::Type{<:Union{One,Zero}}) = Zero()
+Base.zero(x::Union{One,Zero}) = zero(typeof(x))
 
 # Promotion
 # ---------
