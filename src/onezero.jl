@@ -24,9 +24,9 @@ Base.:(+)(x::Number, ::Zero) = x
 Base.:(+)(::Zero, ::Zero) = Zero()
 
 Base.:(*)(::One, x::Number) = x
-Base.:(*)(::Zero, ::Number) = Zero()
+Base.:(*)(::Zero, ::Number) = zero(x)
 Base.:(*)(x::Number, ::One) = x
-Base.:(*)(::Number, ::Zero) = Zero()
+Base.:(*)(::Number, ::Zero) = zero(x)
 Base.:(*)(::Zero, ::Zero) = Zero()
 Base.:(*)(::One, ::One) = One()
 Base.:(*)(::Zero, ::One) = Zero()
@@ -36,10 +36,12 @@ Base.inv(::One) = One()
 Base.conj(::One) = One()
 Base.conj(::Zero) = Zero()
 
-Base.one(::Type{<:Union{One,Zero}}) = One()
-Base.one(x::Union{One,Zero}) = one(typeof(x))
-Base.zero(::Type{<:Union{One,Zero}}) = Zero()
-Base.zero(x::Union{One,Zero}) = zero(typeof(x))
+Base.one(::Type{One}) = One()
+Base.one(::Type{Zero}) = One()
+Base.one(::Union{Zero,One}) = One()
+Base.zero(::Type{One}) = Zero()
+Base.zero(::Type{Zero}) = Zero()
+Base.zero(::Union{Zero,One}) = Zero()
 
 Base.:(==)(::One, ::One) = true
 Base.:(==)(::Zero, ::Zero) = true
@@ -48,7 +50,8 @@ Base.:(==)(::Zero, ::One) = false
 
 # Promotion
 # ---------
-Base.promote_rule(::Type{<:Union{One,Zero}}, ::Type{T}) where {T<:Number} = T
+Base.promote_rule(::Type{One}, ::Type{T}) where {T<:Number} = T
+Base.promote_rule(::Type{Zero}, ::Type{T}) where {T<:Number} = T
 Base.convert(::Type{T}, ::One) where {T<:Number} = one(T)
 (T::Type{<:Number})(::One) = one(T)
 Base.convert(::Type{T}, ::Zero) where {T<:Number} = zero(T)
