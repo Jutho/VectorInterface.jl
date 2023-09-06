@@ -32,8 +32,8 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 # scale, scale! & scale!!
 #-------------------------
 scale(x::AbstractArray, α::Number) = scale.(x, (α,))
-scale!(x::AbstractArray, ::One) = x
 function scale!(x::AbstractArray, α::Number)
+    α === One() && return x
     x .= scale!!.(x, (α,))
     return x
 end
@@ -42,8 +42,8 @@ function scale!(y::AbstractArray, x::AbstractArray, α::Number)
     return y
 end
 
-scale!!(x::AbstractArray, ::One) = x
 function scale!!(x::AbstractArray, α::Number)
+    α === One() && return x
     if promote_scale(x, α) <: scalartype(x)
         return scale!(x, α)
     else
