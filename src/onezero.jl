@@ -39,6 +39,15 @@ Base.:(*)(::One, ::One) = One()
 Base.:(*)(::Zero, ::One) = Zero()
 Base.:(*)(::One, ::Zero) = Zero()
 
+Base.:(/)(::Zero, ::Zero) = throw(DivideError())
+Base.:(/)(::One, ::One) = One()
+Base.:(/)(::Zero, ::One) = Zero()
+Base.:(/)(::One, ::Zero) = throw(DivideError())
+Base.:(/)(::Number, ::Zero) = throw(DivideError())
+Base.:(/)(::Zero, x::Number) = iszero(x) ? throw(DivideError()) : zero(x)
+Base.:(/)(x::Number, ::One) = x
+Base.:(/)(::One, x::Number) = inv(x)
+
 Base.inv(::One) = One()
 
 Base.conj(::One) = One()
