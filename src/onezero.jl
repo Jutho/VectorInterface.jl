@@ -24,9 +24,9 @@ Base.:(+)(x::Number, ::Zero) = x
 Base.:(+)(::Zero, ::Zero) = Zero()
 
 Base.:(*)(::One, x::Number) = x
-Base.:(*)(::Zero, ::Number) = zero(x)
+Base.:(*)(::Zero, x::Number) = zero(x)
 Base.:(*)(x::Number, ::One) = x
-Base.:(*)(::Number, ::Zero) = zero(x)
+Base.:(*)(x::Number, ::Zero) = zero(x)
 Base.:(*)(::Zero, ::Zero) = Zero()
 Base.:(*)(::One, ::One) = One()
 Base.:(*)(::Zero, ::One) = Zero()
