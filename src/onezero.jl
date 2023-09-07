@@ -19,9 +19,16 @@ struct Zero <: Number end
 
 Base.:(-)(::One) = -1
 Base.:(-)(::Zero) = Zero()
+
 Base.:(+)(::Zero, x::Number) = x
 Base.:(+)(x::Number, ::Zero) = x
 Base.:(+)(::Zero, ::Zero) = Zero()
+Base.:(+)(::One, ::One) = 2
+
+Base.:(-)(x::Number, ::Zero) = x
+Base.:(-)(::Zero, x::Number) = -x
+Base.:(-)(::Zero, ::Zero) = Zero()
+Base.:(-)(::One, ::One) = Zero()
 
 Base.:(*)(::One, x::Number) = x
 Base.:(*)(::Zero, x::Number) = zero(x)
@@ -31,6 +38,7 @@ Base.:(*)(::Zero, ::Zero) = Zero()
 Base.:(*)(::One, ::One) = One()
 Base.:(*)(::Zero, ::One) = Zero()
 Base.:(*)(::One, ::Zero) = Zero()
+
 Base.inv(::One) = One()
 
 Base.conj(::One) = One()

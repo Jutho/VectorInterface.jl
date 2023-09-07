@@ -1,5 +1,8 @@
 using VectorInterface
 using Test
+println("Testing One and Zero")
+println("====================")
+include("onezero.jl")
 
 println("Testing with simple numerical array")
 println("===================================")
