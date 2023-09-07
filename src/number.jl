@@ -12,7 +12,8 @@ scalartype(::Type{T}) where {T<:Number} = T
 
 # scale & scale!!
 #-----------------
-@inline scale(x::Number, α::Number) = x * α
+# note: required to make scale(NaN, 0) = 0
+@inline scale(x::Number, α::Number) = (iszero(α) ? zero(x) : x) * α
 @inline scale!!(x::Number, α::Number) = scale(x, α)
 @inline scale!!(y::Number, x::Number, α::Number) = scale(x, α)
 
