@@ -71,9 +71,6 @@ end
     end
 end
 
-@testset "other" begin
-end
-
 @testset "promotion" begin
     for T in typelist
         @test @inferred(promote_type(typeof(I), T)) == T
