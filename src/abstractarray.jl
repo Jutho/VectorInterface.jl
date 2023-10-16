@@ -8,6 +8,10 @@ scalartype(::Type{A}) where {T,A<:AbstractArray{T}} = scalartype(T) # recursive
 
 # zerovector & zerovector!!
 #---------------------------
+# because broadcasting treats zero-dimensional arrays special
+function zerovector(x::AbstractArray{<:Any,0}, ::Type{S}) where {S<:Number}
+    return fill(zerovector(x[], S))
+end
 function zerovector(x::AbstractArray, ::Type{S}) where {S<:Number}
     return zerovector.(x, S)
 end
@@ -31,6 +35,8 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 
 # scale, scale! & scale!!
 #-------------------------
+# because broadcasting treats zero-dimensional arrays special
+scale(x::AbstractArray{<:Any,0}, α::Number) = fill(scale(x[], α))
 scale(x::AbstractArray, α::Number) = scale.(x, (α,))
 function scale!(x::AbstractArray, α::Number)
     α === One() && return x
@@ -60,6 +66,10 @@ end
 
 # add, add! & add!!
 #-------------------
+# because broadcasting treats zero-dimensional arrays special
+function add(y::AbstractArray{<:Any,0}, x::AbstractArray{<:Any,0}, α::Number, β::Number)
+    return fill(add(y[], x[], α, β))
+end
 function add(y::AbstractArray, x::AbstractArray, α::Number, β::Number)
     ax = axes(x)
     ay = axes(y)
