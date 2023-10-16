@@ -20,7 +20,6 @@ println("Testing previously reported issues")
 println("==================================")
 include("issues.jl")
 
-
 println("Quality control test with Aqua.jl")
 println("=================================")
 module AquaVectorInterface
