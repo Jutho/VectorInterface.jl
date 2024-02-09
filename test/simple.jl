@@ -75,6 +75,13 @@ end
     z7 = @constinferred scale!(xz, xcopy, α)
     @test deepcollect(z7) ≈ (α .* deepcollect(x))
     @test all(deepcollect(xcopy) .== deepcollect(x))
+
+    ycomplex = zerovector(y, ComplexF64)
+    α = randn(Float64)
+    xcopy = deepcopy(x)
+    z8 = @constinferred scale!!(ycomplex, xcopy, α)
+    @test z8 === ycomplex
+    @test all(deepcollect(z8) .== α .* deepcollect(xcopy))
 end
 
 @testset "add" begin

@@ -57,7 +57,7 @@ function scale!!(x::AbstractArray, α::Number)
     end
 end
 function scale!!(y::AbstractArray, x::AbstractArray, α::Number)
-    if promote_scale(x, α) <: scalartype(y)
+    if promote_scale(y, x, α) <: scalartype(y)
         return scale!(y, x, α)
     else
         return scale!!.(y, x, (α,))
