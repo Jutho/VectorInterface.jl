@@ -19,7 +19,9 @@ include("onezero.jl")
 promote_scale(x, α::Number) = promote_scale(scalartype(x), typeof(α))
 promote_scale(::Type{Tx}, ::Type{Tα}) where {Tx,Tα<:Number} = Base.promote_op(scale, Tx, Tα)
 promote_scale(x, y, α::Number) = promote_scale(scalartype(x), scalartype(y), typeof(α))
-promote_scale(::Type{Tx}, ::Type{Ty}, ::Type{Tα}) where {Tx,Ty,Tα<:Number} = Base.promote_op(scale, Tx, Ty, Tα)
+function promote_scale(::Type{Tx}, ::Type{Ty}, ::Type{Tα}) where {Tx,Ty,Tα<:Number}
+    return Base.promote_op(scale, Tx, Ty, Tα)
+end
 
 function promote_add(x, y, α::Number=One(), β::Number=One())
     return promote_add(scalartype(x), scalartype(y), typeof(α), typeof(β))
