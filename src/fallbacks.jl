@@ -112,12 +112,15 @@ end
 function scale!!(y, x, α::Number)
     T = Tuple{typeof(y),typeof(x),typeof(α)}
     @warn _warn_message(scale!!, T) maxlog = 1
-    if applicable(LinearAlgebra.mul!, y, x, α) && promote_scale(x, α) <: scalartype(y)
+    if applicable(LinearAlgebra.mul!, y, x, α) && promote_scale(y, x, α) <: scalartype(y)
         return LinearAlgebra.mul!(y, x, α)
-    elseif applicable(*, x, α)
-        return x * α
     else
-        throw(ArgumentError(_error_message(scale!!, T)))
+        α_Ty = α * one(scalartype(y))
+        if applicable(*, x, α_Ty)
+            return x * α_Ty
+        else
+            throw(ArgumentError(_error_message(scale!!, T)))
+        end
     end
 end
 
