@@ -14,8 +14,12 @@ scalartype(::Type{T}) where {T<:Number} = T
 #-----------------
 # note: required to make scale(NaN, 0) = 0
 @inline scale(x::Number, α::Number) = (iszero(α) ? zero(x) : x) * α
+@inline function scale(y::Number, x::Number, α::Number)
+    T = Base.promote_op(*, typeof(y), typeof(x), typeof(α))
+    return convert(T, scale(x, α))
+end
 @inline scale!!(x::Number, α::Number) = scale(x, α)
-@inline scale!!(y::Number, x::Number, α::Number) = scale(x, α)
+@inline scale!!(y::Number, x::Number, α::Number) = scale(y, x, α)
 
 # add & add!!
 #-------------
