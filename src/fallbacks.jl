@@ -18,11 +18,11 @@ end
 #------------
 function scalartype(T::Type)
     @warn _warn_message(scalartype, T) maxlog = 1
-    if applicable(eltype, T)
-        return scalartype(eltype(T))
-    else
-        throw(ArgumentError(_error_message(scalartype, T)))
-    end
+    # the following does not work because `eltype` is always applicable.
+    # applicable(eltype, T) && return scalartype(eltype(T))
+    elT = eltype(T)
+    elT === Any && throw(ArgumentError(_error_message(scalartype, T)))
+    return scalartype(elT)
 end
 # should this try to use `eltype` instead? e.g. scalartype(T) = scalartype(eltype(T))
 
