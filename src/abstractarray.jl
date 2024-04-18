@@ -35,9 +35,8 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 
 # scale, scale! & scale!!
 #-------------------------
-# because broadcasting treats zero-dimensional arrays special
-scale(x::AbstractArray{<:Any,0}, α::Number) = fill(scale(x[], α))
-scale(x::AbstractArray, α::Number) = scale.(x, (α,))
+# because broadcasting treats zero-dimensional arrays special, use map
+scale(x::AbstractArray, α::Number) = map(Base.Fix2(scale, α), x)
 function scale!(x::AbstractArray, α::Number)
     α === One() && return x
     x .= scale!!.(x, (α,))
@@ -66,15 +65,10 @@ end
 
 # add, add! & add!!
 #-------------------
-# because broadcasting treats zero-dimensional arrays special
-function add(y::AbstractArray{<:Any,0}, x::AbstractArray{<:Any,0}, α::Number, β::Number)
-    return fill(add(y[], x[], α, β))
-end
+# because broadcasting treats zero-dimensional arrays special, use map
 function add(y::AbstractArray, x::AbstractArray, α::Number, β::Number)
-    ax = axes(x)
-    ay = axes(y)
-    ax == ay || throw(DimensionMismatch("Output axes $ay differ from input axes $ax"))
-    return add.(y, x, (α,), (β,))
+    _add(y, x) = add(y, x, α, β)
+    return map(_add, y, x)
 end
 
 # Special case: simple numerical arrays with BLAS-compatible floating point type
