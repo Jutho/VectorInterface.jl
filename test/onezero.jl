@@ -78,6 +78,13 @@ end
         @test @inferred(promote_type(T, typeof(I))) == T
         @test @inferred(promote_type(T, typeof(Z))) == T
 
+        @test @inferred(promote_type(One, Zero, T)) == T
+        @test @inferred(promote_type(One, T, Zero)) == T
+        @test @inferred(promote_type(T, One, Zero)) == T
+        @test @inferred(promote_type(Zero, One, T)) == T
+        @test @inferred(promote_type(Zero, T, One)) == T
+        @test @inferred(promote_type(T, Zero, One)) == T
+
         @test @inferred(T(I)) == one(T)
         @test @inferred(T(Z)) == zero(T)
         @test @inferred(convert(T, I)) == one(T)
