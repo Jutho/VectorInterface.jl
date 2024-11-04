@@ -111,9 +111,6 @@ function inner(x::AbstractArray, y::AbstractArray)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Non-matching axes $ax and $ay"))
     T = promote_inner(x, y)
-    s::T = zero(T)
-    for I in eachindex(x)
-        s += inner(x[I], y[I])
-    end
-    return s
+    return mapreduce(inner, +, x, y; init=zero(T))
+    # this version is friendlier to GPU arrays with mixed element types
 end
