@@ -75,6 +75,9 @@ Base.promote_rule(::Type{Zero}, ::Type{One}) = Bool
 Base.promote_rule(::Type{One}, ::Type{Zero}) = Bool
 Base.promote_rule(::Type{One}, ::Type{T}) where {T<:Number} = T
 Base.promote_rule(::Type{Zero}, ::Type{T}) where {T<:Number} = T
+# disambiguate:
+Base.promote_rule(::Type{Bool}, ::Type{One}) = Bool
+Base.promote_rule(::Type{Bool}, ::Type{Zero}) = Bool
 Base.convert(::Type{T}, ::One) where {T<:Number} = one(T)
 (T::Type{<:Number})(::One) = one(T)
 Base.convert(::Type{T}, ::Zero) where {T<:Number} = zero(T)
