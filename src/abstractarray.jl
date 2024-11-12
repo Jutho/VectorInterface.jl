@@ -39,11 +39,11 @@ zerovector!!(x::AbstractArray) = zerovector!(x)
 scale(x::AbstractArray, α::Number) = map(Base.Fix2(scale, α), x)
 function scale!(x::AbstractArray, α::Number)
     α === One() && return x
-    x .= scale!!.(x, (α,))
+    x .= scale!!.(x, α)
     return x
 end
 function scale!(y::AbstractArray, x::AbstractArray, α::Number)
-    y .= scale!!.(y, x, (α,))
+    y .= scale!!.(y, x, α)
     return y
 end
 
@@ -52,14 +52,14 @@ function scale!!(x::AbstractArray, α::Number)
     if promote_scale(x, α) <: scalartype(x)
         return scale!(x, α)
     else
-        return scale!!.(x, (α,))
+        return scale!!.(x, α)
     end
 end
 function scale!!(y::AbstractArray, x::AbstractArray, α::Number)
     if promote_scale(y, x, α) <: scalartype(y)
         return scale!(y, x, α)
     else
-        return scale!!.(y, x, (α,))
+        return scale!!.(y, x, α)
     end
 end
 
