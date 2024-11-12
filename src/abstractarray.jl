@@ -86,7 +86,7 @@ function add!(y::AbstractArray, x::AbstractArray, α::Number, β::Number)
     ax = axes(x)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Output axes $ay differ from input axes $ax"))
-    y .= add!!.(y, x, (α,), (β,)) # might error
+    y .= add!!.(y, x, α, β) # might error
     return y
 end
 
@@ -97,7 +97,7 @@ function add!!(y::AbstractArray, x::AbstractArray, α::Number, β::Number)
         ax = axes(x)
         ay = axes(y)
         ax == ay || throw(DimensionMismatch("Output axes $ay differ from input axes $ax"))
-        return add!!.(y, x, (α,), (β,))
+        return add!!.(y, x, α, β)
     end
 end
 
