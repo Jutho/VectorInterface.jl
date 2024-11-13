@@ -24,7 +24,6 @@ function scalartype(T::Type)
     elT === T && throw(ArgumentError(_error_message(scalartype, T)))
     return scalartype(elT)
 end
-# should this try to use `eltype` instead? e.g. scalartype(T) = scalartype(eltype(T))
 
 # zerovector & zerovector!!
 #---------------------------
@@ -102,8 +101,8 @@ end
 function scale!(y, x, α::Number)
     T = Tuple{typeof(y),typeof(x),typeof(α)}
     @warn _warn_message(scale!, T) maxlog = 1
-    if applicable(LinearAlgebra.mul!, y, x, α)
-        return LinearAlgebra.mul!(y, x, α)
+    if applicable(LinearAlgebra.mul!, y, x, α, true, false)
+        return LinearAlgebra.mul!(y, x, α, true, false)
     else
         throw(ArgumentError(_error_message(scale!, T)))
     end
@@ -112,8 +111,9 @@ end
 function scale!!(y, x, α::Number)
     T = Tuple{typeof(y),typeof(x),typeof(α)}
     @warn _warn_message(scale!!, T) maxlog = 1
-    if applicable(LinearAlgebra.mul!, y, x, α) && promote_scale(y, x, α) <: scalartype(y)
-        return LinearAlgebra.mul!(y, x, α)
+    if applicable(LinearAlgebra.mul!, y, x, α, true, false) &&
+       promote_scale(y, x, α) <: scalartype(y)
+        return LinearAlgebra.mul!(y, x, α, true, false)
     else
         α_Ty = α * one(scalartype(y))
         if applicable(*, x, α_Ty)

@@ -43,4 +43,7 @@ include("namedtuple.jl")
 # General fallback implementation: comes with warning and some overhead
 include("fallbacks.jl")
 
+# Minimal vector type for testing
+include("minimalvec.jl")
+
 end
