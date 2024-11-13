@@ -70,7 +70,8 @@ end
     α = randn(Float64)
     xcopy = deepcopy(x)
     z8 = @constinferred scale!!(ycomplex, xcopy, α)
-    @test all(deepcollect(z8) .=== complex.(α .* deepcollect(xcopy)))
+    @test scalartype(z8) == ComplexF64
+    @test all(deepcollect(z8) .== α .* deepcollect(x))
 end
 
 @testset "add" begin
