@@ -8,6 +8,13 @@ println("Testing with simple numerical array")
 println("===================================")
 include("simple.jl")
 
+println("Testing with MinimalMVec")
+println("=======================")
+include("minimalmvec.jl")
+println("Testing with MinimalSVec")
+println("=======================")
+include("minimalsvec.jl")
+
 println("Testing with complicated composite object")
 println("=========================================")
 include("complicated.jl")
