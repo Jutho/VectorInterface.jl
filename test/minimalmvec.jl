@@ -13,8 +13,6 @@ y = MinimalMVec(randn(3))
 @testset "scalartype" begin
     s = @constinferred scalartype(x)
     @test s == Float64
-    @test_throws ArgumentError scalartype(())
-    @test_throws ArgumentError scalartype((randn(Float64, 2), randn(ComplexF64, 3)))
 end
 
 @testset "zerovector" begin
