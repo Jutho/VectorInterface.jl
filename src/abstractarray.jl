@@ -73,8 +73,7 @@ end
 
 # Special case: simple numerical arrays with BLAS-compatible floating point type
 function add!(
-        y::BLASVector{T}, x::BLASVector{T},
-        α::Number, β::Number
+        y::BLASVector{T}, x::BLASVector{T}, α::Number, β::Number
     ) where {T <: BlasFloat}
     if β === One()
         LinearAlgebra.axpy!(convert(T, α), x, y)

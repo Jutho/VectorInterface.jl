@@ -32,8 +32,7 @@ end
 # add & add!!
 #-------------
 function add(
-        y::NamedTuple{names}, x::NamedTuple{names},
-        α::Number, β::Number
+        y::NamedTuple{names}, x::NamedTuple{names}, α::Number, β::Number
     ) where {names}
     xvals = values(x)
     yvals = values(y)
@@ -41,8 +40,7 @@ function add(
     return NamedTuple{names}(map(yxᵢ -> add(yxᵢ[1], yxᵢ[2], α, β), yxvals))
 end
 function add!!(
-        y::NamedTuple{names}, x::NamedTuple{names},
-        α::Number, β::Number
+        y::NamedTuple{names}, x::NamedTuple{names}, α::Number, β::Number
     ) where {names}
     xvals = values(x)
     yvals = values(y)
