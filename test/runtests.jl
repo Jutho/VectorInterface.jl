@@ -34,3 +34,9 @@ using VectorInterface
 using Aqua
 Aqua.test_all(VectorInterface)
 end
+
+@static if isdefined(Base, :get_extension)
+    println("Testing AD rules")
+    println("================")
+    include("chainrules.jl")
+end
