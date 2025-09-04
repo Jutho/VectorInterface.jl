@@ -8,10 +8,14 @@ using VectorInterface: One
 deepcollect(x) = vcat(map(deepcollect, x)...)
 deepcollect(x::Number) = x
 
-x = (NamedTuple{(:x, :y)}.(collect(zip(randn(2, 2), rand(2, 2)))),
-     (randn(), randn(3), randn(2, 2)'), randn(), (view(randn(4, 4), 1:2, [1, 3, 4]),))
-y = (NamedTuple{(:x, :y)}.(collect(zip(randn(2, 2), rand(2, 2)))),
-     (randn(), randn(3), randn(2, 2)'), randn(), (view(randn(4, 4), 1:2, [1, 3, 4]),))
+x = (
+    NamedTuple{(:x, :y)}.(collect(zip(randn(2, 2), rand(2, 2)))),
+    (randn(), randn(3), randn(2, 2)'), randn(), (view(randn(4, 4), 1:2, [1, 3, 4]),),
+)
+y = (
+    NamedTuple{(:x, :y)}.(collect(zip(randn(2, 2), rand(2, 2)))),
+    (randn(), randn(3), randn(2, 2)'), randn(), (view(randn(4, 4), 1:2, [1, 3, 4]),),
+)
 
 @testset "scalartype" begin
     s = @constinferred scalartype(x)

@@ -30,9 +30,9 @@ include("issues.jl")
 println("Quality control test with Aqua.jl")
 println("=================================")
 module AquaVectorInterface
-using VectorInterface
-using Aqua
-Aqua.test_all(VectorInterface)
+    using VectorInterface
+    using Aqua
+    Aqua.test_all(VectorInterface)
 end
 
 @static if isdefined(Base, :get_extension) && isempty(VERSION.prerelease)

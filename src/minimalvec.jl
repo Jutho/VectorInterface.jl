@@ -16,13 +16,13 @@ To unwrap the contents of a `v::MinimalVec` instance, the field access `v.vec` c
 
 See also [`MinimalMVec`](@ref) and [`MinimalSVec`](@ref) for convenience constructors.
 """
-struct MinimalVec{M,V<:AbstractVector}
+struct MinimalVec{M, V <: AbstractVector}
     vec::V
-    function MinimalVec{M,V}(vec::V) where {M,V}
+    function MinimalVec{M, V}(vec::V) where {M, V}
         M isa Bool || throw(ArgumentError("first type parameter must be `true` or `false`"))
-        return new{M,V}(vec)
+        return new{M, V}(vec)
     end
-    MinimalVec{M}(vec::V) where {M,V} = MinimalVec{M,V}(vec)
+    MinimalVec{M}(vec::V) where {M, V} = MinimalVec{M, V}(vec)
 end
 """
     const MinimalMVec = MinimalVec{true}
@@ -33,7 +33,7 @@ interface of VectorInterface.jl, including in-place operations (!-methods).
 
 See also [`MinimalVec`](@ref) and [`MinimalSVec`](@ref).
 """
-const MinimalMVec{V} = MinimalVec{true,V}
+const MinimalMVec{V} = MinimalVec{true, V}
 """
     const MinimalSVec = MinimalVec{false}
     MinimalSVec(v::AbstractVector)
@@ -43,15 +43,15 @@ minimal interface of VectorInterface.jl, excluding in-place operations (!-method
 
 See also [`MinimalVec`](@ref) and [`MinimalMVec`](@ref).
 """
-const MinimalSVec{V} = MinimalVec{false,V}
+const MinimalSVec{V} = MinimalVec{false, V}
 
 MinimalMVec(v::AbstractVector) = MinimalVec{true}(v)
 MinimalSVec(v::AbstractVector) = MinimalVec{false}(v)
 
-_ismutable(::Type{MinimalVec{M,V}}) where {V,M} = M
+_ismutable(::Type{MinimalVec{M, V}}) where {V, M} = M
 _ismutable(v::MinimalVec) = _ismutable(typeof(v))
 
-scalartype(::Type{<:MinimalVec{M,V}}) where {M,V} = scalartype(V)
+scalartype(::Type{<:MinimalVec{M, V}}) where {M, V} = scalartype(V)
 
 function zerovector(v::MinimalVec, S::Type{<:Number})
     return MinimalVec{_ismutable(v)}(zerovector(v.vec, S))
@@ -77,7 +77,7 @@ function scale!!(v::MinimalVec, α::Number)
         return scale(v, α)
     end
 end
-function scale!(w::MinimalMVec{V}, v::MinimalMVec{W}, α::Number) where {V,W}
+function scale!(w::MinimalMVec{V}, v::MinimalMVec{W}, α::Number) where {V, W}
     scale!(w.vec, v.vec, α)
     return w
 end
@@ -93,7 +93,7 @@ end
 function add(y::MinimalVec, x::MinimalVec, α::Number, β::Number)
     return MinimalVec{_ismutable(y)}(add(y.vec, x.vec, α, β))
 end
-function add!(y::MinimalMVec{W}, x::MinimalMVec{V}, α::Number, β::Number) where {W,V}
+function add!(y::MinimalMVec{W}, x::MinimalMVec{V}, α::Number, β::Number) where {W, V}
     add!(y.vec, x.vec, α, β)
     return y
 end

@@ -1,18 +1,18 @@
 # Vector interface implementation for subtypes of `AbstractArray`
 ##################################################################
-const BLASVector{T<:BlasFloat} = Union{DenseArray{T},StridedVector{T}}
+const BLASVector{T <: BlasFloat} = Union{DenseArray{T}, StridedVector{T}}
 
 # scalartype
 #------------
-scalartype(::Type{A}) where {T,A<:AbstractArray{T}} = scalartype(T) # recursive
+scalartype(::Type{A}) where {T, A <: AbstractArray{T}} = scalartype(T) # recursive
 
 # zerovector & zerovector!!
 #---------------------------
 # because broadcasting treats zero-dimensional arrays special
-function zerovector(x::AbstractArray{<:Any,0}, ::Type{S}) where {S<:Number}
+function zerovector(x::AbstractArray{<:Any, 0}, ::Type{S}) where {S <: Number}
     return fill(zerovector(x[], S))
 end
-function zerovector(x::AbstractArray, ::Type{S}) where {S<:Number}
+function zerovector(x::AbstractArray, ::Type{S}) where {S <: Number}
     return zerovector.(x, S)
 end
 
@@ -72,8 +72,10 @@ function add(y::AbstractArray, x::AbstractArray, α::Number, β::Number)
 end
 
 # Special case: simple numerical arrays with BLAS-compatible floating point type
-function add!(y::BLASVector{T}, x::BLASVector{T},
-              α::Number, β::Number) where {T<:BlasFloat}
+function add!(
+        y::BLASVector{T}, x::BLASVector{T},
+        α::Number, β::Number
+    ) where {T <: BlasFloat}
     if β === One()
         LinearAlgebra.axpy!(convert(T, α), x, y)
     else
@@ -103,7 +105,7 @@ end
 
 # inner
 #-------
-function inner(x::BLASVector{T}, y::BLASVector{T}) where {T<:BlasFloat}
+function inner(x::BLASVector{T}, y::BLASVector{T}) where {T <: BlasFloat}
     return LinearAlgebra.dot(x, y)
 end
 function inner(x::AbstractArray, y::AbstractArray)
@@ -111,6 +113,6 @@ function inner(x::AbstractArray, y::AbstractArray)
     ay = axes(y)
     ax == ay || throw(DimensionMismatch("Non-matching axes $ax and $ay"))
     T = promote_inner(x, y)
-    return mapreduce(inner, +, x, y; init=zero(T))
+    return mapreduce(inner, +, x, y; init = zero(T))
     # this version is friendlier to GPU arrays with mixed element types
 end

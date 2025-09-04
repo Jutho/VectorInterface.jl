@@ -1,6 +1,6 @@
 using LinearAlgebra: LinearAlgebra, rmul!, mul!, axpy!, axpby!, dot, norm
 
-struct SimpleVec{V<:AbstractArray}
+struct SimpleVec{V <: AbstractArray}
     vec::V
 end
 

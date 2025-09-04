@@ -9,8 +9,8 @@ function scalartype(::Type{Tuple{}})
     throw(ArgumentError("no scalar type is defined for empty tuple"))
 end
 scalartype(::Type{Tuple{T}}) where {T} = scalartype(T)
-scalartype(::Type{<:Tuple{T,Vararg{T}}}) where {T} = scalartype(T)
-function scalartype(::Type{TT}) where {TT<:Tuple}
+scalartype(::Type{<:Tuple{T, Vararg{T}}}) where {T} = scalartype(T)
+function scalartype(::Type{TT}) where {TT <: Tuple}
     S = scalartype(Base.tuple_type_head(TT))
     S2 = scalartype(Base.tuple_type_tail(TT))
     S == S2 || throw(ArgumentError("no (unique) scalar type is defined for type $TT"))
@@ -19,7 +19,7 @@ end
 
 # zerovector & zerovector!!
 #---------------------------
-function zerovector(x::Tuple, ::Type{S}) where {S<:Number}
+function zerovector(x::Tuple, ::Type{S}) where {S <: Number}
     y = map(xᵢ -> zerovector(xᵢ, S), x)
     return y
 end
@@ -42,14 +42,14 @@ end
 
 # add & add!!
 #-------------
-function add(y::Tuple, x::Tuple, α::Number=One(), β::Number=One())
+function add(y::Tuple, x::Tuple, α::Number = One(), β::Number = One())
     lx = length(x)
     ly = length(y)
     lx == ly || throw(DimensionMismatch("non-matching tuple lengths $lx and $ly"))
     yx = ntuple(i -> (y[i], x[i]), lx)
     return map(yxᵢ -> add(yxᵢ[1], yxᵢ[2], α, β), yx)
 end
-function add!!(y::Tuple, x::Tuple, α::Number=One(), β::Number=One())
+function add!!(y::Tuple, x::Tuple, α::Number = One(), β::Number = One())
     lx = length(x)
     ly = length(y)
     lx == ly || throw(DimensionMismatch("non-matching tuple lengths $lx and $ly"))

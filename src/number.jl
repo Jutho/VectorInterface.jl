@@ -3,11 +3,11 @@
 
 # scalartype
 #------------
-scalartype(::Type{T}) where {T<:Number} = T
+scalartype(::Type{T}) where {T <: Number} = T
 
 # zerovector & zerovector!!
 #---------------------------
-@inline zerovector(::Number, ::Type{S}) where {S<:Number} = zero(S)
+@inline zerovector(::Number, ::Type{S}) where {S <: Number} = zero(S)
 @inline zerovector!!(x::Number) = zero(x)
 
 # scale & scale!!
