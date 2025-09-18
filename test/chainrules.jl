@@ -84,12 +84,12 @@ end
     # MinimalMVec
     mx = MinimalMVec(x)
     my = MinimalMVec(y)
-    test_rrule(inner, my, mx; atol, rtol, check_inferred=false)
+    test_rrule(inner, mx, my; atol, rtol, check_inferred=false)
 
     # MinimalSVec
     mx = MinimalSVec(x)
     my = MinimalSVec(y)
-    test_rrule(inner, my, mx; atol, rtol, check_inferred=false)
+    test_rrule(inner, mx, my; atol, rtol, check_inferred=false)
 end
 
 end
