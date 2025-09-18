@@ -6,14 +6,14 @@ using Test, TestExtras
 using ChainRulesTestUtils
 using ChainRulesCore: ChainRulesCore, AbstractZero
 
-precision(::Type{T}) where {T<:Union{Float32,ComplexF32}} = sqrt(eps(Float32))
-precision(::Type{T}) where {T<:Union{Float64,ComplexF64}} = sqrt(eps(Float64))
+precision(::Type{T}) where {T <: Union{Float32, ComplexF32}} = sqrt(eps(Float32))
+precision(::Type{T}) where {T <: Union{Float64, ComplexF64}} = sqrt(eps(Float64))
 
 # Small adaptations to make tests work with MinimalVec
-function ChainRulesTestUtils.test_approx(::AbstractZero, x::MinimalVec, msg=""; kwargs...)
+function ChainRulesTestUtils.test_approx(::AbstractZero, x::MinimalVec, msg = ""; kwargs...)
     return test_approx(zerovector(x), x, msg; kwargs...)
 end
-function ChainRulesTestUtils.test_approx(x::MinimalVec, ::AbstractZero, msg=""; kwargs...)
+function ChainRulesTestUtils.test_approx(x::MinimalVec, ::AbstractZero, msg = ""; kwargs...)
     return test_approx(x, zerovector(x), msg; kwargs...)
 end
 Base.collect(x::MinimalVec) = x.vec
@@ -35,16 +35,16 @@ eltypes = (Float32, Float64, ComplexF64)
     # MinimalMVec
     mx = MinimalMVec(x)
     my = MinimalMVec(y)
-    test_rrule(scale, mx, α; atol, rtol, check_inferred=false)
-    test_rrule(scale!!, mx, α; atol, rtol, check_inferred=false)
-    test_rrule(scale!!, my, mx, α; atol, rtol, check_inferred=false)
+    test_rrule(scale, mx, α; atol, rtol, check_inferred = false)
+    test_rrule(scale!!, mx, α; atol, rtol, check_inferred = false)
+    test_rrule(scale!!, my, mx, α; atol, rtol, check_inferred = false)
 
     # MinimalSVec
     mx = MinimalSVec(x)
     my = MinimalSVec(y)
-    test_rrule(scale, mx, α; atol, rtol, check_inferred=false)
-    test_rrule(scale!!, mx, α; atol, rtol, check_inferred=false)
-    test_rrule(scale!!, my, mx, α; atol, rtol, check_inferred=false)
+    test_rrule(scale, mx, α; atol, rtol, check_inferred = false)
+    test_rrule(scale!!, mx, α; atol, rtol, check_inferred = false)
+    test_rrule(scale!!, my, mx, α; atol, rtol, check_inferred = false)
 end
 
 @testset "add pullbacks ($T)" for T in eltypes
@@ -62,14 +62,14 @@ end
     # MinimalMVec
     mx = MinimalMVec(x)
     my = MinimalMVec(y)
-    test_rrule(add, my, mx, α, β; atol, rtol, check_inferred=false)
-    test_rrule(add!!, my, mx, α, β; atol, rtol, check_inferred=false)
+    test_rrule(add, my, mx, α, β; atol, rtol, check_inferred = false)
+    test_rrule(add!!, my, mx, α, β; atol, rtol, check_inferred = false)
 
     # MinimalSVec
     mx = MinimalSVec(x)
     my = MinimalSVec(y)
-    test_rrule(add, my, mx, α, β; atol, rtol, check_inferred=false)
-    test_rrule(add!!, my, mx, α, β; atol, rtol, check_inferred=false)
+    test_rrule(add, my, mx, α, β; atol, rtol, check_inferred = false)
+    test_rrule(add!!, my, mx, α, β; atol, rtol, check_inferred = false)
 end
 
 @testset "inner pullbacks ($T)" for T in eltypes
@@ -84,12 +84,12 @@ end
     # MinimalMVec
     mx = MinimalMVec(x)
     my = MinimalMVec(y)
-    test_rrule(inner, mx, my; atol, rtol, check_inferred=false)
+    test_rrule(inner, mx, my; atol, rtol, check_inferred = false)
 
     # MinimalSVec
     mx = MinimalSVec(x)
     my = MinimalSVec(y)
-    test_rrule(inner, mx, my; atol, rtol, check_inferred=false)
+    test_rrule(inner, mx, my; atol, rtol, check_inferred = false)
 end
 
 end
