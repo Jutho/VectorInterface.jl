@@ -5,8 +5,10 @@ using VectorInterface
 
 const Z = Zero()
 const I = One()
-const typelist = (Int32, Int64, Float16, Float32, Float64, ComplexF16, ComplexF32,
-                  ComplexF64, BigFloat)
+const typelist = (
+    Int32, Int64, Float16, Float32, Float64, ComplexF16, ComplexF32,
+    ComplexF64, BigFloat,
+)
 
 @testset "equalities" begin
     @test I == 1

@@ -2,7 +2,7 @@ module VectorInterfaceChainRulesCoreExt
 
 using VectorInterface
 using ChainRulesCore: ChainRulesCore, NoTangent, ZeroTangent, StructuralTangent, rrule,
-                      backing, unthunk
+    backing, unthunk
 
 # scale
 # -----
@@ -31,8 +31,8 @@ function ChainRulesCore.rrule(::typeof(add), y, x, α::Number, β::Number)
     function add_pullback(Δz_)
         Δz = unthunk(Δz_)
         return NoTangent(),
-               scale(Δz, conj(β)), scale(Δz, conj(α)),
-               inner(x, Δz), inner(y, Δz)
+            scale(Δz, conj(β)), scale(Δz, conj(α)),
+            inner(x, Δz), inner(y, Δz)
     end
     return z, add_pullback
 end
@@ -53,8 +53,9 @@ end
 # ---------------
 VectorInterface.scale(x::StructuralTangent, α::Number) = map(Base.Fix2(scale, α), x)
 
-function VectorInterface.add(y::StructuralTangent{P}, x::StructuralTangent{P}, α::Number,
-                             β::Number) where {P}
+function VectorInterface.add(
+        y::StructuralTangent{P}, x::StructuralTangent{P}, α::Number, β::Number
+    ) where {P}
     return ChainRulesCore.add!!(scale(y, β), scale(x, α))
 end
 

@@ -5,11 +5,11 @@
 
 # scalartype
 #------------
-scalartype(::Type{NamedTuple{names,T}}) where {names,T<:Tuple} = scalartype(T)
+scalartype(::Type{NamedTuple{names, T}}) where {names, T <: Tuple} = scalartype(T)
 
 # zerovector & zerovector!!
 #---------------------------
-function zerovector(x::NamedTuple, ::Type{S}) where {S<:Number}
+function zerovector(x::NamedTuple, ::Type{S}) where {S <: Number}
     return NamedTuple{keys(x)}(zerovector(values(x), S))
 end
 function zerovector!!(x::NamedTuple)
@@ -31,15 +31,17 @@ end
 
 # add & add!!
 #-------------
-function add(y::NamedTuple{names}, x::NamedTuple{names},
-             α::Number, β::Number) where {names}
+function add(
+        y::NamedTuple{names}, x::NamedTuple{names}, α::Number, β::Number
+    ) where {names}
     xvals = values(x)
     yvals = values(y)
     yxvals = ntuple(i -> (yvals[i], xvals[i]), length(x))
     return NamedTuple{names}(map(yxᵢ -> add(yxᵢ[1], yxᵢ[2], α, β), yxvals))
 end
-function add!!(y::NamedTuple{names}, x::NamedTuple{names},
-               α::Number, β::Number) where {names}
+function add!!(
+        y::NamedTuple{names}, x::NamedTuple{names}, α::Number, β::Number
+    ) where {names}
     xvals = values(x)
     yvals = values(y)
     yxvals = ntuple(i -> (yvals[i], xvals[i]), length(x))
