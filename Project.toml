@@ -1,13 +1,21 @@
 name = "VectorInterface"
 uuid = "409d34a3-91d5-4945-b6ec-7529ddf182d8"
 authors = ["Jutho Haegeman <jutho.haegeman@ugent.be> and contributors"]
-version = "0.5"
+version = "0.5.1"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 
+[weakdeps]
+ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
+
+[extensions]
+VectorInterfaceChainRulesCoreExt = "ChainRulesCore"
+
 [compat]
 Aqua = "0.6, 0.7, 0.8"
+ChainRulesCore = "1"
+ChainRulesTestUtils = "1"
 LinearAlgebra = "1"
 Test = "1"
 TestExtras = "0.2,0.3"
@@ -15,8 +23,10 @@ julia = "1"
 
 [extras]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+ChainRulesCore = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
+ChainRulesTestUtils = "cdddcdb0-9152-4a09-a978-84456f9df70a"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 TestExtras = "5ed8adda-3752-4e41-b88a-e8b09835ee3a"
 
 [targets]
-test = ["Test", "TestExtras", "Aqua"]
+test = ["Test", "TestExtras", "Aqua", "ChainRulesTestUtils", "ChainRulesCore"]
