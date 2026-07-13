@@ -1,7 +1,5 @@
 module VectorInterfaceEnzymeExt
 
-# COV_EXCL_START
-# Enzyme rules aren't reachable by coverage
 using VectorInterface
 using Enzyme
 using Enzyme.EnzymeCore
@@ -57,7 +55,7 @@ function EnzymeRules.reverse(
     else
         nothing
     end
-    scale!(C.dval, conj(αval))
+    !isa(C, Const) && scale!(C.dval, conj(αval))
     return (nothing, Δα)
 end
 
@@ -121,7 +119,7 @@ function EnzymeRules.reverse(
     else
         nothing
     end
-    zerovector!(C.dval)
+    !isa(C, Const) && zerovector!(C.dval)
     return (nothing, nothing, Δα)
 end
 
@@ -292,6 +290,5 @@ function EnzymeRules.forward(
         return nothing
     end
 end
-# COV_EXCL_STOP
 
 end
